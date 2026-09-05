@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { 
-  Sparkles, 
   Play, 
   Zap, 
   AlertTriangle, 
@@ -73,8 +72,18 @@ export const Header: React.FC<HeaderProps> = ({
           className="flex items-center gap-3 cursor-pointer hover:opacity-90 transition group flex-shrink-0"
           title="Return to RecoverAI Main Dashboard"
         >
-          <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-sky-400 via-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-sky-500/20 group-hover:scale-105 transition-transform">
-            <Sparkles className="w-5 h-5 text-white animate-pulse" />
+          <div className="relative h-10 w-10 flex items-center justify-center group-hover:scale-105 transition-transform">
+            {/* Outer Cyan Glow Ring */}
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-sky-400 via-cyan-400 to-blue-600 blur-md opacity-60 group-hover:opacity-100 transition" />
+            {/* Cyber Shield Container */}
+            <div className="relative h-10 w-10 rounded-2xl bg-slate-950 border border-cyan-400/50 flex items-center justify-center shadow-2xl overflow-hidden">
+              <svg className="w-6 h-6 text-sky-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" className="text-cyan-500/30 fill-cyan-500/20" />
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                <path d="M12 8v4" className="stroke-sky-300" strokeWidth="2.5" />
+                <circle cx="12" cy="15" r="1.5" className="fill-cyan-300 animate-ping" />
+              </svg>
+            </div>
           </div>
           <span className="font-black text-2xl text-white tracking-widest uppercase">RECOVERAI</span>
         </div>
