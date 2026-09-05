@@ -46,31 +46,41 @@ export const Header: React.FC<HeaderProps> = ({
     <header className="bg-slate-900 border-b border-slate-800 sticky top-0 z-40 backdrop-blur-md bg-opacity-95">
       {/* Top Banner */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-col md:flex-row items-center justify-between gap-4">
-        {/* Brand & Tagline */}
-        <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl bg-gradient-to-tr from-cyan-500 via-blue-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-cyan-500/20">
+        {/* Brand & Tagline - Clickable to return to Intro Landing Page */}
+        <div 
+          onClick={onOpenLogin}
+          className="flex items-center gap-3 cursor-pointer hover:opacity-90 transition group"
+          title="Return to Intro Landing Page"
+        >
+          <div className="h-10 w-10 rounded-xl bg-gradient-to-tr from-cyan-500 via-blue-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-cyan-500/20 group-hover:scale-105 transition-transform">
             <ShieldCheck className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-white tracking-tight">RecoverAI</h1>
+            <h1 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
+              <span>RecoverAI</span>
+              <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                ← Intro Page
+              </span>
+            </h1>
             <p className="text-xs text-slate-400">Real-Time Autonomous Revenue Recovery Agent</p>
           </div>
         </div>
 
         {/* Real-time Status & Demo Triggers */}
         <div className="flex items-center gap-3">
-          {/* Active Merchant Badge / Sign In Trigger */}
+          {/* Active Merchant Profile / Logout Trigger */}
           <button
             onClick={onOpenLogin}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700/80 border border-slate-700 text-xs transition"
+            title="Click to Logout & Exit to Intro Page"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-rose-950/40 border border-slate-700 hover:border-rose-500/50 text-xs transition group"
           >
-            <User className="w-3.5 h-3.5 text-cyan-400" />
+            <User className="w-3.5 h-3.5 text-cyan-400 group-hover:text-rose-400" />
             <div className="text-left">
-              <div className="text-white font-bold leading-none text-[11px]">
+              <div className="text-white font-bold leading-none text-[11px] group-hover:text-rose-300">
                 {currentMerchant ? currentMerchant.company_name : "Sign In Merchant"}
               </div>
-              <div className="text-[10px] text-slate-400 leading-none mt-0.5 font-mono">
-                {currentMerchant ? currentMerchant.merchant_id : "Click to Login"}
+              <div className="text-[10px] text-slate-400 leading-none mt-0.5 font-mono group-hover:text-rose-400">
+                Logout & Exit 🚪
               </div>
             </div>
           </button>

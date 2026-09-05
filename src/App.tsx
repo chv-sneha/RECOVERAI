@@ -38,9 +38,9 @@ export function App() {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
   const [wsConnected, setWsConnected] = useState<boolean>(false);
 
-  // Authentication state
+  // Authentication state - Always start on Intro Landing Page unless explicitly authenticated in session
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
-    return localStorage.getItem("recoverai_merchant_logged_in") === "true";
+    return sessionStorage.getItem("recoverai_session_active") === "true";
   });
 
   const [currentMerchant, setCurrentMerchant] = useState<{ merchant_id: string; name: string; company_name: string; email: string } | null>(() => {
@@ -56,7 +56,7 @@ export function App() {
   // Listen to Firebase Auth state changes
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (fbUser) => {
-      if (fbUser) {
+      if (fbUser && sessionStorage.getItem("recoverai_session_active") === "true") {
         const merchant = {
           merchant_id: `mch_${fbUser.uid.substring(0, 8)}`,
           name: fbUser.displayName || currentMerchant?.name || "Merchant Partner",
@@ -65,8 +65,6 @@ export function App() {
         };
         setCurrentMerchant(merchant);
         setIsLoggedIn(true);
-        localStorage.setItem("recoverai_merchant_logged_in", "true");
-        localStorage.setItem("recoverai_merchant_profile", JSON.stringify(merchant));
       }
     });
     return () => unsubscribe();
@@ -75,6 +73,7 @@ export function App() {
   const handleLoginSuccess = (merchant: { merchant_id: string; name: string; company_name: string; email: string }) => {
     setCurrentMerchant(merchant);
     setIsLoggedIn(true);
+    sessionStorage.setItem("recoverai_session_active", "true");
     localStorage.setItem("recoverai_merchant_logged_in", "true");
     localStorage.setItem("recoverai_merchant_profile", JSON.stringify(merchant));
   };
@@ -82,6 +81,7 @@ export function App() {
   const handleLogout = () => {
     signOut(auth).catch(() => {});
     setIsLoggedIn(false);
+    sessionStorage.removeItem("recoverai_session_active");
     localStorage.removeItem("recoverai_merchant_logged_in");
   };
 
