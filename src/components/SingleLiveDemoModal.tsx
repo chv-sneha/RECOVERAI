@@ -131,9 +131,14 @@ export const SingleLiveDemoModal: React.FC<SingleLiveDemoModalProps> = ({
           <div className="p-2.5 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
             <Play className="w-6 h-6 fill-current" />
           </div>
-          <div>
-            <h2 className="text-lg font-bold text-white">Live Payment Failure Recovery Demo</h2>
-            <p className="text-xs text-slate-400">Autonomous Closed-Loop Simulation with Custom Test Input</p>
+          <div className="flex-1">
+            <div className="flex items-center gap-2">
+              <h2 className="text-lg font-bold text-white">Payment Failure Recovery Workflow</h2>
+              <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                SIMULATION DEMO MODE
+              </span>
+            </div>
+            <p className="text-xs text-slate-400">Autonomous Closed-Loop Pipeline Execution & Razorpay API Link Generation</p>
           </div>
         </div>
 
