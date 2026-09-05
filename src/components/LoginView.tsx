@@ -61,64 +61,64 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 selection:bg-cyan-500 selection:text-white relative overflow-hidden font-sans">
-      {/* Background Grid Pattern */}
+    <div className="min-h-screen bg-[#030712] text-slate-100 selection:bg-sky-500 selection:text-white relative overflow-hidden font-sans">
+      {/* Background Subtle Fine Grid Pattern */}
       <div 
-        className="absolute inset-0 opacity-[0.04] pointer-events-none z-0" 
+        className="absolute inset-0 opacity-[0.05] pointer-events-none z-0" 
         style={{ 
           backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.8) 1px, transparent 0)`,
           backgroundSize: '32px 32px'
         }} 
       />
 
-      {/* Original Cyan / Blue Ambient Light Glows */}
-      <div className="absolute top-1/4 -left-40 w-[600px] h-[600px] bg-cyan-600/15 rounded-full blur-[160px] pointer-events-none" />
-      <div className="absolute top-1/2 -right-40 w-[600px] h-[600px] bg-blue-600/15 rounded-full blur-[160px] pointer-events-none" />
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-indigo-600/10 rounded-full blur-[180px] pointer-events-none" />
+      {/* Prominent Sky Blue / Cyan Ambient Radial Light Bursts (Matching Mandamus screenshot layout in Sky Blue) */}
+      <div className="absolute top-10 -left-32 w-[750px] h-[650px] bg-sky-500/25 rounded-full blur-[170px] pointer-events-none" />
+      <div className="absolute top-1/2 -right-32 w-[650px] h-[600px] bg-cyan-600/20 rounded-full blur-[170px] pointer-events-none" />
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[800px] h-[450px] bg-blue-600/10 rounded-full blur-[180px] pointer-events-none" />
 
-      {/* Header with Centered Capsule Nav */}
+      {/* Header with Centered Capsule Navigation & Clean Logo */}
       <header className="fixed top-0 left-0 right-0 z-50 py-5 px-6 sm:px-12">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          {/* Logo Brand */}
+          {/* Logo Brand Name - Clean Uppercase Bold (Matching Mandamus Screenshot) */}
           <div className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-cyan-500 via-blue-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-cyan-500/20">
+            <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-sky-400 via-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-sky-500/30">
               <ShieldCheck className="w-5 h-5 text-white" />
             </div>
-            <span className="font-black text-xl text-white tracking-widest uppercase">RECOVERAI</span>
+            <span className="font-black text-2xl text-white tracking-widest uppercase">RECOVERAI</span>
           </div>
 
-          {/* Floating Pill Center Navigation */}
+          {/* Floating Center Capsule Nav */}
           <nav className="hidden md:flex items-center gap-8 px-7 py-2.5 rounded-full bg-slate-900/80 border border-slate-800/80 backdrop-blur-xl shadow-2xl">
             <button 
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              className="text-xs font-semibold text-slate-200 hover:text-cyan-400 transition"
+              className="text-xs font-semibold text-slate-100 hover:text-sky-400 transition"
             >
               Home
             </button>
             <button 
               onClick={() => scrollToSection('how-it-works')}
-              className="text-xs font-semibold text-slate-400 hover:text-cyan-400 transition"
+              className="text-xs font-semibold text-slate-400 hover:text-sky-400 transition"
             >
               How it works
             </button>
             <button 
               onClick={() => scrollToSection('features')}
-              className="text-xs font-semibold text-slate-400 hover:text-cyan-400 transition"
+              className="text-xs font-semibold text-slate-400 hover:text-sky-400 transition"
             >
               Features
             </button>
             <button 
               onClick={() => scrollToSection('about')}
-              className="text-xs font-semibold text-slate-400 hover:text-cyan-400 transition"
+              className="text-xs font-semibold text-slate-400 hover:text-sky-400 transition"
             >
               About
             </button>
           </nav>
 
-          {/* Top-Right Sign In Pill Button */}
+          {/* Top-Right Sky Blue Sign In Pill Button */}
           <button
             onClick={() => setShowLoginModal(true)}
-            className="px-6 py-2.5 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold text-xs shadow-lg shadow-cyan-500/25 transition active:scale-95"
+            className="px-7 py-2.5 rounded-full bg-gradient-to-r from-sky-400 via-cyan-500 to-blue-600 hover:from-sky-300 hover:to-blue-500 text-white font-bold text-xs shadow-xl shadow-sky-500/30 transition active:scale-95"
           >
             Sign In
           </button>
@@ -127,12 +127,12 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
 
       {/* Main Hero Section */}
       <section className="relative pt-44 pb-28 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center z-10">
-        {/* Outlined Capsule Top Badge */}
-        <div className="inline-flex items-center px-4 py-1.5 rounded-full border border-cyan-500/30 bg-cyan-500/10 text-cyan-400 text-[11px] font-bold tracking-widest uppercase mb-8">
+        {/* Sky Blue Outlined Top Badge */}
+        <div className="inline-flex items-center px-4 py-1.5 rounded-full border border-sky-400/40 bg-sky-500/10 text-sky-300 text-[11px] font-bold tracking-widest uppercase mb-8 shadow-lg shadow-sky-500/10">
           RAZORPAY AI REVENUE PLATFORM
         </div>
 
-        {/* Hero Headline */}
+        {/* Hero Title */}
         <h1 className="text-5xl sm:text-7xl font-black text-white tracking-tight leading-[1.08] mb-6">
           Revenue Lost <br className="hidden sm:inline" />
           Is Revenue Denied.
@@ -147,7 +147,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <button
             onClick={handleQuickDemoLogin}
-            className="w-full sm:w-auto px-8 py-4 rounded-full bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-bold text-xs tracking-wide shadow-xl shadow-cyan-500/30 transition active:scale-95 flex items-center justify-center gap-2"
+            className="w-full sm:w-auto px-8 py-4 rounded-full bg-gradient-to-r from-sky-400 via-cyan-500 to-blue-600 hover:from-sky-300 hover:to-blue-500 text-white font-bold text-xs tracking-wide shadow-xl shadow-sky-500/30 transition active:scale-95 flex items-center justify-center gap-2"
           >
             <span>Explore the Platform</span>
           </button>
@@ -160,12 +160,12 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
         </div>
       </section>
 
-      {/* Floating Bottom-Right Assistant Widget (Matching image layout) */}
+      {/* Floating Bottom-Right Assistant Trigger Button */}
       <div className="fixed bottom-6 right-6 z-40 flex items-center gap-3">
         <div className="hidden sm:block max-w-xs bg-slate-900/90 border border-slate-800 rounded-2xl p-3.5 shadow-2xl backdrop-blur-xl text-left">
           <div className="flex items-center gap-2 mb-1">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-            <span className="text-[10px] font-bold text-cyan-400 tracking-wider uppercase">AI Agent Active</span>
+            <span className="text-[10px] font-bold text-sky-400 tracking-wider uppercase">AI Agent Active</span>
           </div>
           <p className="text-[11px] text-slate-300">
             Click <strong>Explore the Platform</strong> for 1-click merchant demo access.
@@ -173,7 +173,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
         </div>
         <button
           onClick={handleQuickDemoLogin}
-          className="h-12 w-12 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-600 text-white flex items-center justify-center shadow-xl shadow-cyan-500/30 hover:scale-105 transition active:scale-95"
+          className="h-12 w-12 rounded-full bg-gradient-to-tr from-sky-400 via-cyan-500 to-blue-600 text-white flex items-center justify-center shadow-xl shadow-sky-500/30 hover:scale-105 transition active:scale-95"
           title="Launch Demo"
         >
           <Bot className="w-6 h-6" />
@@ -183,7 +183,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
       {/* Section: How It Works */}
       <section id="how-it-works" className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-900 relative z-10">
         <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
-          <span className="text-[11px] font-extrabold text-cyan-400 tracking-widest uppercase">AUTOMATED RECOVERY ENGINE</span>
+          <span className="text-[11px] font-extrabold text-sky-400 tracking-widest uppercase">AUTOMATED RECOVERY ENGINE</span>
           <h2 className="text-3xl sm:text-4xl font-black text-white">How RecoverAI Operates</h2>
           <p className="text-xs sm:text-sm text-slate-400">
             A closed-loop AI agent pipeline that intercepts payment failures directly via Razorpay Webhooks.
@@ -191,8 +191,8 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 hover:border-cyan-500/50 transition">
-            <div className="w-9 h-9 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center font-bold text-xs mb-4 border border-cyan-500/20">
+          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 hover:border-sky-500/50 transition">
+            <div className="w-9 h-9 rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center font-bold text-xs mb-4 border border-sky-500/20">
               01
             </div>
             <h3 className="text-sm font-bold text-white mb-2">Signal Interception</h3>
@@ -201,8 +201,8 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
             </p>
           </div>
 
-          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 hover:border-blue-500/50 transition">
-            <div className="w-9 h-9 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center font-bold text-xs mb-4 border border-blue-500/20">
+          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 hover:border-cyan-500/50 transition">
+            <div className="w-9 h-9 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center font-bold text-xs mb-4 border border-cyan-500/20">
               02
             </div>
             <h3 className="text-sm font-bold text-white mb-2">Root-Cause Diagnosis</h3>
@@ -211,8 +211,8 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
             </p>
           </div>
 
-          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 hover:border-indigo-500/50 transition">
-            <div className="w-9 h-9 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-xs mb-4 border border-indigo-500/20">
+          <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 hover:border-blue-500/50 transition">
+            <div className="w-9 h-9 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center font-bold text-xs mb-4 border border-blue-500/20">
               03
             </div>
             <h3 className="text-sm font-bold text-white mb-2">Policy Guardrails</h3>
@@ -236,7 +236,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
       {/* Section: Features */}
       <section id="features" className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-900 relative z-10">
         <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
-          <span className="text-[11px] font-extrabold text-cyan-400 tracking-widest uppercase">PLATFORM CAPABILITIES</span>
+          <span className="text-[11px] font-extrabold text-sky-400 tracking-widest uppercase">PLATFORM CAPABILITIES</span>
           <h2 className="text-3xl sm:text-4xl font-black text-white">Built for Razorpay Merchants</h2>
           <p className="text-xs sm:text-sm text-slate-400">
             Enterprise-grade safety, closed-loop execution, and real-time dashboard analytics.
@@ -245,7 +245,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="bg-slate-900/60 border border-slate-800 rounded-3xl p-8 space-y-4 hover:border-slate-700 transition">
-            <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-2xl bg-sky-500/10 border border-sky-500/20 text-sky-400 flex items-center justify-center">
               <Zap className="w-6 h-6" />
             </div>
             <h3 className="text-base font-bold text-white">Razorpay Smart Links</h3>
@@ -265,7 +265,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
           </div>
 
           <div className="bg-slate-900/60 border border-slate-800 rounded-3xl p-8 space-y-4 hover:border-slate-700 transition">
-            <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center">
               <Activity className="w-6 h-6" />
             </div>
             <h3 className="text-base font-bold text-white">Immutable Audit Trail</h3>
@@ -279,7 +279,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
       {/* Section: About */}
       <section id="about" className="py-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto border-t border-slate-900 text-center relative z-10">
         <div className="bg-slate-900/60 border border-slate-800 rounded-3xl p-10 space-y-6 shadow-2xl">
-          <span className="px-3.5 py-1 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-xs font-bold">
+          <span className="px-3.5 py-1 rounded-full bg-sky-500/10 text-sky-400 border border-sky-500/20 text-xs font-bold">
             Autonomous Agent
           </span>
           <h2 className="text-3xl font-black text-white">Autonomous Revenue Recovery</h2>
@@ -289,7 +289,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
           <div className="pt-2 flex items-center justify-center gap-4">
             <button
               onClick={handleQuickDemoLogin}
-              className="px-8 py-3.5 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold text-xs tracking-wider shadow-lg transition active:scale-95"
+              className="px-8 py-3.5 rounded-full bg-gradient-to-r from-sky-400 via-cyan-500 to-blue-600 hover:from-sky-300 hover:to-blue-500 text-white font-bold text-xs tracking-wider shadow-lg transition active:scale-95"
             >
               Enter Merchant Portal Now
             </button>
@@ -309,7 +309,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
             </button>
 
             <div className="text-center space-y-2">
-              <div className="mx-auto h-12 w-12 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/20">
+              <div className="mx-auto h-12 w-12 rounded-xl bg-gradient-to-tr from-sky-400 to-blue-600 flex items-center justify-center shadow-lg shadow-sky-500/20">
                 <ShieldCheck className="w-7 h-7 text-white" />
               </div>
               <h3 className="text-lg font-bold text-white">Merchant Portal Sign In</h3>
@@ -327,7 +327,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
                     value={companyName}
                     onChange={(e) => setCompanyName(e.target.value)}
                     placeholder="TechCorp India Pvt Ltd"
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-3.5 py-2.5 text-xs text-white focus:border-cyan-500 focus:outline-none"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-3.5 py-2.5 text-xs text-white focus:border-sky-500 focus:outline-none"
                   />
                 </div>
               </div>
@@ -342,7 +342,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="Rajesh Kumar"
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-3.5 py-2.5 text-xs text-white focus:border-cyan-500 focus:outline-none"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-3.5 py-2.5 text-xs text-white focus:border-sky-500 focus:outline-none"
                   />
                 </div>
               </div>
@@ -357,7 +357,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="rajesh@techcorp.in"
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-3.5 py-2.5 text-xs text-white focus:border-cyan-500 focus:outline-none"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-3.5 py-2.5 text-xs text-white focus:border-sky-500 focus:outline-none"
                   />
                 </div>
               </div>
@@ -365,7 +365,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full py-3 rounded-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs transition shadow-md shadow-cyan-900/30"
+                className="w-full py-3 rounded-full bg-sky-500 hover:bg-sky-400 text-white font-bold text-xs transition shadow-md shadow-sky-900/30"
               >
                 {isLoading ? "Authenticating..." : "Sign In to Merchant Portal"}
               </button>
