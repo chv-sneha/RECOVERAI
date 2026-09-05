@@ -9,6 +9,7 @@ import { SingleLiveDemoModal } from './components/SingleLiveDemoModal';
 import { BatchSimulationModal } from './components/BatchSimulationModal';
 import { CaseDetailModal } from './components/CaseDetailModal';
 import { LoginModal } from './components/LoginModal';
+import { LoginView } from './components/LoginView';
 
 import type { 
   RecoveryCase, DashboardMetrics, AgentActivityMessage, 
@@ -32,15 +33,35 @@ export function App() {
 
   const [isSingleDemoOpen, setIsSingleDemoOpen] = useState<boolean>(false);
   const [isBatchSimOpen, setIsBatchSimOpen] = useState<boolean>(false);
-  const [isLoginOpen, setIsLoginOpen] = useState<boolean>(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
   const [wsConnected, setWsConnected] = useState<boolean>(false);
 
-  const [currentMerchant, setCurrentMerchant] = useState<{ merchant_id: string; name: string; company_name: string; email: string } | null>({
-    merchant_id: "mch_8829_techcorp",
-    name: "Rajesh Kumar",
-    company_name: "TechCorp India Pvt Ltd",
-    email: "rajesh@techcorp.in"
+  // Authentication state
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
+    return localStorage.getItem("recoverai_merchant_logged_in") === "true";
   });
+
+  const [currentMerchant, setCurrentMerchant] = useState<{ merchant_id: string; name: string; company_name: string; email: string } | null>(() => {
+    const saved = localStorage.getItem("recoverai_merchant_profile");
+    return saved ? JSON.parse(saved) : {
+      merchant_id: "mch_8829_techcorp",
+      name: "Rajesh Kumar",
+      company_name: "TechCorp India Pvt Ltd",
+      email: "rajesh@techcorp.in"
+    };
+  });
+
+  const handleLoginSuccess = (merchant: { merchant_id: string; name: string; company_name: string; email: string }) => {
+    setCurrentMerchant(merchant);
+    setIsLoggedIn(true);
+    localStorage.setItem("recoverai_merchant_logged_in", "true");
+    localStorage.setItem("recoverai_merchant_profile", JSON.stringify(merchant));
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    localStorage.removeItem("recoverai_merchant_logged_in");
+  };
 
   // Attempt WebSocket connection to FastAPI backend at ws://localhost:8000/ws/events
   useEffect(() => {
@@ -71,14 +92,6 @@ export function App() {
     return () => {
       if (socket) socket.close();
     };
-  }, []);
-
-  // Fetch initial merchant info
-  useEffect(() => {
-    fetch("http://localhost:8000/api/v1/auth/me")
-      .then(res => res.json())
-      .then(data => setCurrentMerchant(data))
-      .catch(() => {});
   }, []);
 
   // Recalculate metrics whenever cases change
@@ -259,6 +272,11 @@ export function App() {
     };
   };
 
+  // Render Login Landing Page if not logged in
+  if (!isLoggedIn) {
+    return <LoginView onLoginSuccess={handleLoginSuccess} />;
+  }
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 font-sans antialiased selection:bg-cyan-500 selection:text-white">
       {/* Header */}
@@ -270,7 +288,7 @@ export function App() {
         wsConnected={wsConnected}
         activeEscalationCount={cases.filter(c => c.state === 'ESCALATED' || c.is_escalated).length}
         currentMerchant={currentMerchant}
-        onOpenLogin={() => setIsLoginOpen(true)}
+        onOpenLogin={handleLogout}
       />
 
       {/* Main Container */}
@@ -347,9 +365,9 @@ export function App() {
       />
 
       <LoginModal
-        isOpen={isLoginOpen}
-        onClose={() => setIsLoginOpen(false)}
-        onLoginSuccess={setCurrentMerchant}
+        isOpen={isLoginModalOpen}
+        onClose={() => setIsLoginModalOpen(false)}
+        onLoginSuccess={handleLoginSuccess}
       />
     </div>
   );
