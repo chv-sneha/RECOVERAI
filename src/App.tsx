@@ -11,6 +11,7 @@ import { CaseDetailModal } from './components/CaseDetailModal';
 import { LoginModal } from './components/LoginModal';
 import { LoginView } from './components/LoginView';
 import { ChatbotWidget } from './components/ChatbotWidget';
+import { auth, onAuthStateChanged, signOut } from './firebase';
 
 import type { 
   RecoveryCase, DashboardMetrics, AgentActivityMessage, 
@@ -52,6 +53,25 @@ export function App() {
     };
   });
 
+  // Listen to Firebase Auth state changes
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (fbUser) => {
+      if (fbUser) {
+        const merchant = {
+          merchant_id: `mch_${fbUser.uid.substring(0, 8)}`,
+          name: fbUser.displayName || currentMerchant?.name || "Merchant Partner",
+          company_name: currentMerchant?.company_name || "Registered Merchant",
+          email: fbUser.email || ""
+        };
+        setCurrentMerchant(merchant);
+        setIsLoggedIn(true);
+        localStorage.setItem("recoverai_merchant_logged_in", "true");
+        localStorage.setItem("recoverai_merchant_profile", JSON.stringify(merchant));
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
   const handleLoginSuccess = (merchant: { merchant_id: string; name: string; company_name: string; email: string }) => {
     setCurrentMerchant(merchant);
     setIsLoggedIn(true);
@@ -60,6 +80,7 @@ export function App() {
   };
 
   const handleLogout = () => {
+    signOut(auth).catch(() => {});
     setIsLoggedIn(false);
     localStorage.removeItem("recoverai_merchant_logged_in");
   };
