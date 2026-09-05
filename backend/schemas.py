@@ -2,6 +2,23 @@ from pydantic import BaseModel, Field
 from typing import Optional, List, Dict, Any
 from datetime import datetime
 
+class MerchantLoginRequest(BaseModel):
+    email: str = "rajesh@techcorp.in"
+    name: Optional[str] = "Rajesh Kumar"
+    company_name: Optional[str] = "TechCorp India Pvt Ltd"
+
+class MerchantProfileResponse(BaseModel):
+    merchant_id: str
+    name: str
+    company_name: str
+    email: str
+    has_custom_keys: bool
+    last_login_at: str
+
+class MerchantKeysUpdate(BaseModel):
+    razorpay_key_id: str
+    razorpay_key_secret: str
+
 class WebhookEventPayload(BaseModel):
     event_type: str
     source: str = "RAZORPAY_WEBHOOK"
@@ -21,7 +38,7 @@ class AIDiagnosisOutput(BaseModel):
     root_cause: str
     is_recoverable: bool
     recovery_probability: float = Field(..., ge=0.0, le=1.0)
-    recommended_intervention: str  # RETRY_PAYMENT, GENERATE_PAYMENT_LINK, SEND_RECOVERY_NOTIFICATION, SEND_INVOICE_REMINDER, ESCALATE_TO_HUMAN, STOP_RECOVERY
+    recommended_intervention: str
     confidence: float = Field(..., ge=0.0, le=1.0)
     reasoning: str
     max_attempts: int = 3
@@ -31,7 +48,7 @@ class AIDiagnosisOutput(BaseModel):
 
 class PolicyValidationResult(BaseModel):
     is_approved: bool
-    status_code: str  # APPROVED, GATED_PASSED, REJECTED_MAX_RETRIES, REJECTED_CAP_EXCEEDED, REJECTED_COOLDOWN, ESCALATED_HUMAN
+    status_code: str
     gating_reason: str
     final_action: str
     modified_parameters: Optional[Dict[str, Any]] = None
@@ -50,7 +67,7 @@ class PolicyConfigRequest(BaseModel):
     require_approval_above: float = 30000.0
 
 class BatchSimulationConfig(BaseModel):
-    scenario_type: str = "MIXED_STORE"  # MIXED_STORE, HIGH_VALUE_B2B, CHECKOUT_DROP, SUBSCRIPTION_CHURN
+    scenario_type: str = "MIXED_STORE"
     event_count: int = 20
     customer_count: int = 10
     recovery_optimism: float = 0.7

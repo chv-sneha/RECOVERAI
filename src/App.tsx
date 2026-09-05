@@ -8,6 +8,7 @@ import { AuditLogView } from './components/AuditLogView';
 import { SingleLiveDemoModal } from './components/SingleLiveDemoModal';
 import { BatchSimulationModal } from './components/BatchSimulationModal';
 import { CaseDetailModal } from './components/CaseDetailModal';
+import { LoginModal } from './components/LoginModal';
 
 import type { 
   RecoveryCase, DashboardMetrics, AgentActivityMessage, 
@@ -31,7 +32,15 @@ export function App() {
 
   const [isSingleDemoOpen, setIsSingleDemoOpen] = useState<boolean>(false);
   const [isBatchSimOpen, setIsBatchSimOpen] = useState<boolean>(false);
+  const [isLoginOpen, setIsLoginOpen] = useState<boolean>(false);
   const [wsConnected, setWsConnected] = useState<boolean>(false);
+
+  const [currentMerchant, setCurrentMerchant] = useState<{ merchant_id: string; name: string; company_name: string; email: string } | null>({
+    merchant_id: "mch_8829_techcorp",
+    name: "Rajesh Kumar",
+    company_name: "TechCorp India Pvt Ltd",
+    email: "rajesh@techcorp.in"
+  });
 
   // Attempt WebSocket connection to FastAPI backend at ws://localhost:8000/ws/events
   useEffect(() => {
@@ -62,6 +71,14 @@ export function App() {
     return () => {
       if (socket) socket.close();
     };
+  }, []);
+
+  // Fetch initial merchant info
+  useEffect(() => {
+    fetch("http://localhost:8000/api/v1/auth/me")
+      .then(res => res.json())
+      .then(data => setCurrentMerchant(data))
+      .catch(() => {});
   }, []);
 
   // Recalculate metrics whenever cases change
@@ -138,8 +155,8 @@ export function App() {
       timestamp: new Date().toISOString(),
       agent_reasoning: "Live single recovery demo executed successfully.",
       policy_decision: "APPROVED",
-      action_executed: "RETRY_PAYMENT",
-      result_summary: "₹4,999 recovered via Razorpay Sandbox retry token.",
+      action_executed: "GENERATE_PAYMENT_LINK",
+      result_summary: "₹4,999 recovered via Razorpay Sandbox payment link.",
       state_from: "ACTION_EXECUTING",
       state_to: "RECOVERED"
     };
@@ -214,7 +231,7 @@ export function App() {
         max_attempts: 3,
         cooldown_hours: 4.0,
         state: isSuccess ? "RECOVERED" : "ESCALATED",
-        current_action: isSuccess ? "RETRY_PAYMENT" : "ESCALATE_TO_HUMAN",
+        current_action: isSuccess ? "GENERATE_PAYMENT_LINK" : "ESCALATE_TO_HUMAN",
         is_escalated: !isSuccess,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
@@ -252,6 +269,8 @@ export function App() {
         onOpenBatchSim={() => setIsBatchSimOpen(true)}
         wsConnected={wsConnected}
         activeEscalationCount={cases.filter(c => c.state === 'ESCALATED' || c.is_escalated).length}
+        currentMerchant={currentMerchant}
+        onOpenLogin={() => setIsLoginOpen(true)}
       />
 
       {/* Main Container */}
@@ -325,6 +344,12 @@ export function App() {
       <CaseDetailModal
         caseData={selectedCase}
         onClose={() => setSelectedCase(null)}
+      />
+
+      <LoginModal
+        isOpen={isLoginOpen}
+        onClose={() => setIsLoginOpen(false)}
+        onLoginSuccess={setCurrentMerchant}
       />
     </div>
   );

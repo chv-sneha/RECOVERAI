@@ -4,6 +4,20 @@ from sqlalchemy import Column, String, Float, Integer, Boolean, DateTime, Text, 
 from sqlalchemy.orm import relationship
 from .database import Base
 
+class MerchantAccountModel(Base):
+    __tablename__ = "merchant_accounts"
+
+    id = Column(Integer, primary_key=True, index=True)
+    merchant_id = Column(String, unique=True, index=True, default=lambda: f"mch_{uuid.uuid4().hex[:8]}")
+    name = Column(String, default="Rajesh Kumar")
+    company_name = Column(String, default="TechCorp India Pvt Ltd")
+    email = Column(String, unique=True, index=True, default="rajesh@techcorp.in")
+    razorpay_key_id = Column(String, nullable=True)
+    razorpay_key_secret = Column(String, nullable=True)
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    last_login_at = Column(DateTime, default=datetime.datetime.utcnow)
+
 class EventModel(Base):
     __tablename__ = "events"
 

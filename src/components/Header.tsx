@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ShieldCheck, Play, Zap, AlertTriangle, FileText, Settings, Layers, BarChart2 } from 'lucide-react';
+import { ShieldCheck, Play, Zap, AlertTriangle, FileText, Settings, Layers, BarChart2, User } from 'lucide-react';
 
 interface HeaderProps {
   activeTab: string;
@@ -8,6 +8,8 @@ interface HeaderProps {
   onOpenBatchSim: () => void;
   wsConnected: boolean;
   activeEscalationCount: number;
+  currentMerchant: { merchant_id: string; name: string; company_name: string; email: string } | null;
+  onOpenLogin: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -16,7 +18,9 @@ export const Header: React.FC<HeaderProps> = ({
   onTriggerSingleDemo,
   onOpenBatchSim,
   wsConnected,
-  activeEscalationCount
+  activeEscalationCount,
+  currentMerchant,
+  onOpenLogin
 }) => {
   const [merchantStatus, setMerchantStatus] = useState<any>(null);
 
@@ -60,6 +64,22 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Real-time Status & Demo Triggers */}
         <div className="flex items-center gap-3">
+          {/* Active Merchant Badge / Sign In Trigger */}
+          <button
+            onClick={onOpenLogin}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700/80 border border-slate-700 text-xs transition"
+          >
+            <User className="w-3.5 h-3.5 text-cyan-400" />
+            <div className="text-left">
+              <div className="text-white font-bold leading-none text-[11px]">
+                {currentMerchant ? currentMerchant.company_name : "Sign In Merchant"}
+              </div>
+              <div className="text-[10px] text-slate-400 leading-none mt-0.5 font-mono">
+                {currentMerchant ? currentMerchant.merchant_id : "Click to Login"}
+              </div>
+            </div>
+          </button>
+
           {/* Dynamic Razorpay Connection Status Badge */}
           <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs ${
             isRazorpayConnected

@@ -4,6 +4,7 @@ import hmac
 import hashlib
 import os
 import uuid
+import datetime
 from typing import List
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Depends, HTTPException, Request, Header
 from fastapi.middleware.cors import CORSMiddleware
@@ -12,11 +13,13 @@ from sqlalchemy.orm import Session
 from .database import engine, get_db, Base
 from .models import (
     EventModel, RecoveryCaseModel, ActionModel, 
-    PolicyConfigModel, AuditLogModel, CustomerHistoryModel
+    PolicyConfigModel, AuditLogModel, CustomerHistoryModel,
+    MerchantAccountModel
 )
 from .schemas import (
     WebhookEventPayload, PolicyConfigRequest, 
-    BatchSimulationConfig, BatchSimulationReport
+    BatchSimulationConfig, BatchSimulationReport,
+    MerchantLoginRequest, MerchantProfileResponse, MerchantKeysUpdate
 )
 from .services.orchestrator import RecoveryOrchestrator
 from .services.simulator import run_batch_simulation
@@ -80,12 +83,74 @@ async def websocket_endpoint(websocket: WebSocket):
 def health_check():
     return {"status": "HEALTHY", "agent": "RecoverAI Real-Time Engine v1.0"}
 
+# Merchant Auth Endpoints
+@app.post("/api/v1/auth/login", response_model=MerchantProfileResponse)
+def login_merchant(req: MerchantLoginRequest, db: Session = Depends(get_db)):
+    merchant = db.query(MerchantAccountModel).filter(MerchantAccountModel.email == req.email).first()
+    if not merchant:
+        merchant = MerchantAccountModel(
+            name=req.name or "Rajesh Kumar",
+            company_name=req.company_name or "TechCorp India Pvt Ltd",
+            email=req.email
+        )
+        db.add(merchant)
+        db.commit()
+        db.refresh(merchant)
+    else:
+        merchant.last_login_at = datetime.datetime.utcnow()
+        db.commit()
+        db.refresh(merchant)
+
+    return MerchantProfileResponse(
+        merchant_id=merchant.merchant_id,
+        name=merchant.name,
+        company_name=merchant.company_name,
+        email=merchant.email,
+        has_custom_keys=bool(merchant.razorpay_key_id),
+        last_login_at=merchant.last_login_at.isoformat()
+    )
+
+@app.get("/api/v1/auth/me", response_model=MerchantProfileResponse)
+def get_current_merchant(db: Session = Depends(get_db)):
+    merchant = db.query(MerchantAccountModel).first()
+    if not merchant:
+        merchant = MerchantAccountModel()
+        db.add(merchant)
+        db.commit()
+        db.refresh(merchant)
+        
+    return MerchantProfileResponse(
+        merchant_id=merchant.merchant_id,
+        name=merchant.name,
+        company_name=merchant.company_name,
+        email=merchant.email,
+        has_custom_keys=bool(merchant.razorpay_key_id),
+        last_login_at=merchant.last_login_at.isoformat()
+    )
+
+@app.post("/api/v1/auth/keys")
+def update_merchant_keys(req: MerchantKeysUpdate, db: Session = Depends(get_db)):
+    merchant = db.query(MerchantAccountModel).first()
+    if not merchant:
+        merchant = MerchantAccountModel()
+        db.add(merchant)
+
+    merchant.razorpay_key_id = req.razorpay_key_id
+    merchant.razorpay_key_secret = req.razorpay_key_secret
+    db.commit()
+    return {"status": "SUCCESS", "message": "Custom Razorpay credentials saved server-side."}
+
 # Merchant Razorpay Integration Connection Status Endpoint
 @app.get("/api/v1/merchant/status")
-def get_merchant_status():
+def get_merchant_status(db: Session = Depends(get_db)):
     status = test_razorpay_connection()
+    merchant = db.query(MerchantAccountModel).first()
+    
     status["webhook_endpoint"] = "http://127.0.0.1:8000/api/v1/events/webhook"
     status["webhook_secret_configured"] = bool(os.getenv("RAZORPAY_WEBHOOK_SECRET"))
+    if merchant:
+        status["merchant_name"] = merchant.company_name
+        status["merchant_id"] = merchant.merchant_id
     return status
 
 # Dashboard Financial KPIs Endpoint
