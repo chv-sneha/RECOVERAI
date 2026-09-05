@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ShieldCheck, Play, Zap, AlertTriangle, FileText, Settings, Layers, BarChart2, User } from 'lucide-react';
+import { ShieldCheck, Play, Zap, AlertTriangle, FileText, Settings, Layers, BarChart2, User, LogOut } from 'lucide-react';
 
 interface HeaderProps {
   activeTab: string;
@@ -16,7 +16,6 @@ export const Header: React.FC<HeaderProps> = ({
   activeTab,
   setActiveTab,
   onTriggerSingleDemo,
-  onOpenBatchSim,
   wsConnected,
   activeEscalationCount,
   currentMerchant,
@@ -32,122 +31,92 @@ export const Header: React.FC<HeaderProps> = ({
   }, []);
 
   const tabs = [
-    { id: 'dashboard', label: 'Financial Dashboard', icon: BarChart2 },
+    { id: 'dashboard', label: 'Dashboard', icon: BarChart2 },
     { id: 'cases', label: 'Recovery Cases', icon: Layers },
-    { id: 'control', label: 'Agent Control Center', icon: Settings },
-    { id: 'escalations', label: 'Human Escalation Queue', icon: AlertTriangle, badge: activeEscalationCount },
+    { id: 'control', label: 'Control Center', icon: Settings },
+    { id: 'escalations', label: 'Escalations', icon: AlertTriangle, badge: activeEscalationCount },
     { id: 'audit', label: 'Audit Trail', icon: FileText },
-    { id: 'batch', label: 'Batch Simulation Lab', icon: Zap },
+    { id: 'batch', label: 'Batch Lab', icon: Zap },
   ];
 
   const isRazorpayConnected = merchantStatus?.connected;
 
   return (
-    <header className="bg-slate-900 border-b border-slate-800 sticky top-0 z-40 backdrop-blur-md bg-opacity-95">
-      {/* Top Banner */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-col md:flex-row items-center justify-between gap-4">
-        {/* Brand & Tagline - Clickable to return to Intro Landing Page */}
+    <header className="sticky top-0 z-50 bg-[#030712]/95 border-b border-slate-800/80 backdrop-blur-xl py-3 px-4 sm:px-8 shadow-2xl font-sans">
+      <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+        {/* Far Left Brand Logo (Matching Mandamus Screenshot) */}
         <div 
           onClick={onOpenLogin}
-          className="flex items-center gap-3 cursor-pointer hover:opacity-90 transition group"
-          title="Return to Intro Landing Page"
+          className="flex items-center gap-3 cursor-pointer hover:opacity-90 transition group flex-shrink-0"
+          title="Click to Exit & Return to Intro Page"
         >
-          <div className="h-10 w-10 rounded-xl bg-gradient-to-tr from-cyan-500 via-blue-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-cyan-500/20 group-hover:scale-105 transition-transform">
-            <ShieldCheck className="w-6 h-6 text-white" />
+          <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-sky-400 via-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-sky-500/20 group-hover:scale-105 transition-transform">
+            <ShieldCheck className="w-5 h-5 text-white" />
           </div>
-          <div>
-            <h1 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
-              <span>RecoverAI</span>
-              <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
-                ← Intro Page
-              </span>
-            </h1>
-            <p className="text-xs text-slate-400">Real-Time Autonomous Revenue Recovery Agent</p>
-          </div>
+          <span className="font-black text-xl text-white tracking-widest uppercase">RECOVERAI</span>
         </div>
 
-        {/* Real-time Status & Demo Triggers */}
-        <div className="flex items-center gap-3">
-          {/* Active Merchant Profile / Logout Trigger */}
-          <button
-            onClick={onOpenLogin}
-            title="Click to Logout & Exit to Intro Page"
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-rose-950/40 border border-slate-700 hover:border-rose-500/50 text-xs transition group"
-          >
-            <User className="w-3.5 h-3.5 text-cyan-400 group-hover:text-rose-400" />
-            <div className="text-left">
-              <div className="text-white font-bold leading-none text-[11px] group-hover:text-rose-300">
-                {currentMerchant ? currentMerchant.company_name : "Sign In Merchant"}
-              </div>
-              <div className="text-[10px] text-slate-400 leading-none mt-0.5 font-mono group-hover:text-rose-400">
-                Logout & Exit 🚪
-              </div>
-            </div>
-          </button>
+        {/* Center Floating Capsule Nav (Matching Mandamus Screenshot) */}
+        <nav className="hidden md:flex items-center gap-1.5 p-1.5 rounded-full bg-slate-900/90 border border-slate-800/90 backdrop-blur-xl shadow-2xl">
+          {tabs.map((tab) => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all ${
+                  isActive
+                    ? 'bg-gradient-to-r from-sky-400 via-cyan-500 to-blue-600 text-white shadow-md shadow-sky-500/25 font-bold'
+                    : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+                }`}
+              >
+                <Icon className="w-3.5 h-3.5" />
+                <span>{tab.label}</span>
+                {tab.badge !== undefined && tab.badge > 0 && (
+                  <span className="px-1.5 py-0.2 rounded-full text-[10px] font-black bg-rose-500 text-white">
+                    {tab.badge}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </nav>
 
-          {/* Dynamic Razorpay Connection Status Badge */}
-          <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs ${
+        {/* Far Right Action Buttons */}
+        <div className="flex items-center gap-2.5 flex-shrink-0">
+          {/* Status Badge */}
+          <div className={`hidden lg:flex items-center gap-1.5 px-3 py-1 rounded-full border text-[11px] font-medium ${
             isRazorpayConnected
               ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-              : 'bg-slate-800/80 border-slate-700/60 text-slate-300'
+              : 'bg-slate-900 border-slate-800 text-slate-300'
           }`}>
-            <span className={`h-2.5 w-2.5 rounded-full ${
-              isRazorpayConnected 
-                ? 'bg-emerald-400 animate-pulse' 
-                : (wsConnected ? 'bg-cyan-400 animate-pulse' : 'bg-amber-400')
+            <span className={`h-2 w-2 rounded-full ${
+              isRazorpayConnected ? 'bg-emerald-400 animate-pulse' : (wsConnected ? 'bg-cyan-400 animate-pulse' : 'bg-amber-400')
             }`} />
-            <span className="font-semibold">
-              {isRazorpayConnected
-                ? 'Razorpay Connected ✓ (Test Mode)'
-                : (wsConnected ? 'Agent Live (WebSocket Active)' : 'Simulation Mode')}
-            </span>
+            <span>{isRazorpayConnected ? 'Razorpay Test Connected' : 'Sandbox Active'}</span>
           </div>
 
-          {/* Quick Single Demo Action */}
+          {/* Quick Demo Trigger */}
           <button
             onClick={onTriggerSingleDemo}
-            className="flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-medium text-xs hover:from-emerald-500 hover:to-teal-500 transition shadow-md shadow-emerald-900/30 active:scale-95"
+            className="px-3.5 py-1.5 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-lg shadow-emerald-900/30 transition flex items-center gap-1.5 active:scale-95"
           >
             <Play className="w-3.5 h-3.5 fill-current" />
-            <span>Simulate Single ₹4,999 Failure</span>
+            <span className="hidden sm:inline">Simulate Failure</span>
           </button>
 
-          {/* Start Batch Simulation Button */}
+          {/* Logout & Profile Button */}
           <button
-            onClick={onOpenBatchSim}
-            className="flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium text-xs hover:from-blue-500 hover:to-indigo-500 transition shadow-md shadow-indigo-900/30 active:scale-95"
+            onClick={onOpenLogin}
+            className="px-4 py-1.5 rounded-full bg-slate-900 hover:bg-rose-950/50 border border-slate-800 hover:border-rose-500/40 text-slate-200 hover:text-rose-300 text-xs font-bold transition flex items-center gap-1.5"
+            title="Logout & Exit to Intro Page"
           >
-            <Zap className="w-3.5 h-3.5" />
-            <span>Batch Simulation</span>
+            <User className="w-3.5 h-3.5 text-sky-400" />
+            <span className="hidden sm:inline">{currentMerchant?.company_name ? currentMerchant.company_name.split(' ')[0] : 'Logout'}</span>
+            <LogOut className="w-3 h-3 text-slate-400" />
           </button>
         </div>
-      </div>
-
-      {/* Navigation Bar */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex overflow-x-auto no-scrollbar border-t border-slate-800/60">
-        {tabs.map((tab) => {
-          const Icon = tab.icon;
-          const isActive = activeTab === tab.id;
-          return (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-4 py-3 text-xs font-medium border-b-2 whitespace-nowrap transition-colors ${
-                isActive
-                  ? 'border-cyan-500 text-cyan-400 bg-cyan-500/5'
-                  : 'border-transparent text-slate-400 hover:text-slate-200 hover:border-slate-700'
-              }`}
-            >
-              <Icon className="w-4 h-4" />
-              <span>{tab.label}</span>
-              {tab.badge !== undefined && tab.badge > 0 && (
-                <span className="ml-1 px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30">
-                  {tab.badge}
-                </span>
-              )}
-            </button>
-          );
-        })}
       </div>
     </header>
   );
