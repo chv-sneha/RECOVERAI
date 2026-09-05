@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShieldCheck, User, Building, Mail, LogIn, ArrowRight, X, Lock } from 'lucide-react';
+import { ShieldCheck, User, Building, Mail, X, Lock } from 'lucide-react';
 import { 
   auth, 
   googleProvider, 
@@ -128,16 +128,6 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin
     }
   };
 
-  const handleDemoLogin = () => {
-    onLoginSuccess({
-      merchant_id: "mch_8829_techcorp",
-      name: "Rajesh Kumar",
-      company_name: "TechCorp India Pvt Ltd",
-      email: "rajesh@techcorp.in"
-    });
-    onClose();
-  };
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4 animate-fadeIn">
       <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl relative overflow-hidden">
@@ -165,18 +155,6 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin
             {errorMsg}
           </div>
         )}
-
-        {/* 1-Click Quick Demo Login Button */}
-        <div className="mb-4">
-          <button
-            onClick={handleDemoLogin}
-            className="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs shadow-lg shadow-emerald-900/30 transition flex items-center justify-center gap-2 group active:scale-95"
-          >
-            <LogIn className="w-4 h-4" />
-            <span>⚡ 1-Click Demo Login (TechCorp)</span>
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </button>
-        </div>
 
         {/* Google Auth Button */}
         <button
