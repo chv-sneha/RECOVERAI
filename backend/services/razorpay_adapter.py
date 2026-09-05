@@ -4,22 +4,30 @@ import uuid
 import datetime
 import logging
 from requests.auth import HTTPBasicAuth
+from dotenv import load_dotenv
+
+load_dotenv()
 
 logger = logging.getLogger("recoverai.razorpay_adapter")
 
-RAZORPAY_KEY_ID = os.getenv("RAZORPAY_KEY_ID", "")
-RAZORPAY_KEY_SECRET = os.getenv("RAZORPAY_KEY_SECRET", "")
+def get_razorpay_keys():
+    load_dotenv()
+    key_id = os.getenv("RAZORPAY_KEY_ID", "")
+    key_secret = os.getenv("RAZORPAY_KEY_SECRET", "")
+    return key_id, key_secret
 
 def is_real_razorpay_configured() -> bool:
     """Returns True if non-dummy Razorpay Test credentials are provided in env."""
+    key_id, key_secret = get_razorpay_keys()
     return bool(
-        RAZORPAY_KEY_ID 
-        and RAZORPAY_KEY_SECRET 
-        and not RAZORPAY_KEY_ID.startswith("rzp_test_recoverai_hackathon")
+        key_id 
+        and key_secret 
+        and not key_id.startswith("rzp_test_recoverai_hackathon")
     )
 
 def test_razorpay_connection() -> dict:
     """Tests server-side connectivity to Razorpay Test API using basic auth."""
+    key_id, key_secret = get_razorpay_keys()
     if not is_real_razorpay_configured():
         return {
             "connected": False,
@@ -29,12 +37,12 @@ def test_razorpay_connection() -> dict:
     
     try:
         url = "https://api.razorpay.com/v1/payments?count=1"
-        res = requests.get(url, auth=HTTPBasicAuth(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET), timeout=5)
+        res = requests.get(url, auth=HTTPBasicAuth(key_id, key_secret), timeout=5)
         if res.status_code == 200:
             return {
                 "connected": True,
                 "mode": "RAZORPAY_TEST_MODE",
-                "key_id_masked": f"{RAZORPAY_KEY_ID[:8]}...{RAZORPAY_KEY_ID[-4:]}",
+                "key_id_masked": f"{key_id[:8]}...{key_id[-4:]}",
                 "message": "Razorpay Test Mode API Connected successfully."
             }
         else:
@@ -63,6 +71,7 @@ def execute_razorpay_action(action_type: str, case_data: dict, parameters: dict 
     if action_type in ["GENERATE_PAYMENT_LINK", "SEND_RECOVERY_NOTIFICATION"]:
         if is_real_razorpay_configured():
             try:
+                key_id, key_secret = get_razorpay_keys()
                 url = "https://api.razorpay.com/v1/payment_links"
                 payload = {
                     "amount": amount_in_paisa,
@@ -83,7 +92,7 @@ def execute_razorpay_action(action_type: str, case_data: dict, parameters: dict 
                         "recovered_by": "RecoverAI Agent"
                     }
                 }
-                res = requests.post(url, json=payload, auth=HTTPBasicAuth(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET), timeout=8)
+                res = requests.post(url, json=payload, auth=HTTPBasicAuth(key_id, key_secret), timeout=8)
                 if res.status_code in [200, 201]:
                     data = res.json()
                     pl_id = data.get("id")
