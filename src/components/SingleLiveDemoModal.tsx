@@ -35,12 +35,13 @@ export const SingleLiveDemoModal: React.FC<SingleLiveDemoModalProps> = ({
     setCurrentStep(1);
     setIsExecuting(true);
 
-    setTimeout(() => setCurrentStep(2), 1200);
-    setTimeout(() => setCurrentStep(3), 2600);
-    setTimeout(() => setCurrentStep(4), 4000);
-    setTimeout(() => setCurrentStep(5), 5400);
+    setTimeout(() => setCurrentStep(2), 1000);
+    setTimeout(() => setCurrentStep(3), 2200);
+    setTimeout(() => setCurrentStep(4), 3400);
+    setTimeout(() => setCurrentStep(5), 4600);
+    setTimeout(() => setCurrentStep(6), 5800);
     setTimeout(() => {
-      setCurrentStep(6);
+      setCurrentStep(7); // Completed state (all 6 steps done)
       setIsExecuting(false);
       // Create recovered case record with custom details
       const liveCase: RecoveryCase = {
@@ -67,7 +68,7 @@ export const SingleLiveDemoModal: React.FC<SingleLiveDemoModalProps> = ({
         updated_at: new Date().toISOString()
       };
       onCompleteLiveDemo(liveCase);
-    }, 6800);
+    }, 7000);
   };
 
   if (!isOpen) return null;
