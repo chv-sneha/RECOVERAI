@@ -69,9 +69,9 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="w-full flex items-center justify-between">
         {/* Far Left End: Brand Icon & Name */}
         <div 
-          onClick={onOpenLogin}
+          onClick={() => setActiveTab('dashboard')}
           className="flex items-center gap-3 cursor-pointer hover:opacity-90 transition group flex-shrink-0"
-          title="Click to Exit & Return to Intro Page"
+          title="Return to RecoverAI Main Dashboard"
         >
           <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-sky-400 via-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-sky-500/20 group-hover:scale-105 transition-transform">
             <ShieldCheck className="w-5 h-5 text-white" />
