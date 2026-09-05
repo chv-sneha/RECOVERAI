@@ -19,7 +19,7 @@ export const SingleLiveDemoModal: React.FC<SingleLiveDemoModalProps> = ({
   // Editable custom test inputs
   const [customName, setCustomName] = useState<string>('Sneha (Your Test Customer)');
   const [customEmail, setCustomEmail] = useState<string>('sneha@merchantstore.in');
-  const [customAmount, setCustomAmount] = useState<number>(4999.0);
+  const [customAmount, setCustomAmount] = useState<string>('4999');
   const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
 
   useEffect(() => {
@@ -27,8 +27,11 @@ export const SingleLiveDemoModal: React.FC<SingleLiveDemoModalProps> = ({
       setCurrentStep(0);
       setIsExecuting(false);
       setIsFormSubmitted(false);
+      setCustomAmount('4999');
     }
   }, [isOpen]);
+
+  const numericAmount = parseFloat(customAmount) || 4999.0;
 
   const handleStartSimulation = () => {
     setIsFormSubmitted(true);
@@ -50,8 +53,8 @@ export const SingleLiveDemoModal: React.FC<SingleLiveDemoModalProps> = ({
         customer_name: customName || "Test Customer",
         customer_email: customEmail || "test@merchantstore.in",
         transaction_id: `pay_live_${Math.floor(Math.random() * 89999 + 10000)}`,
-        amount_at_risk: Number(customAmount) || 4999.0,
-        estimated_recoverable: (Number(customAmount) || 4999.0) * 0.9,
+        amount_at_risk: numericAmount,
+        estimated_recoverable: numericAmount * 0.9,
         revenue_risk_type: "PAYMENT_FAILURE",
         failure_reason: "Issuing Bank Downtime (Transient Timeout)",
         failure_code: "BAD_REQUEST_ERROR",
@@ -77,14 +80,14 @@ export const SingleLiveDemoModal: React.FC<SingleLiveDemoModalProps> = ({
     {
       num: 1,
       title: "1. Event Ingestion Layer",
-      desc: `Razorpay webhook payment.failed received (₹${customAmount.toLocaleString('en-IN')}). Customer: ${customName}. Timestamp & HMAC payload persisted.`,
+      desc: `Razorpay webhook payment.failed received (₹${numericAmount.toLocaleString('en-IN')}). Customer: ${customName}. Timestamp & HMAC payload persisted.`,
       icon: Activity,
       color: "border-blue-500 bg-blue-500/10 text-blue-400"
     },
     {
       num: 2,
       title: "2. Revenue Risk Engine",
-      desc: `Identified payment failure. Amount ₹${customAmount.toLocaleString('en-IN')} moved into Total Revenue at Risk for ${customName}.`,
+      desc: `Identified payment failure. Amount ₹${numericAmount.toLocaleString('en-IN')} moved into Total Revenue at Risk for ${customName}.`,
       icon: DollarSign,
       color: "border-amber-500 bg-amber-500/10 text-amber-400"
     },
@@ -98,7 +101,7 @@ export const SingleLiveDemoModal: React.FC<SingleLiveDemoModalProps> = ({
     {
       num: 4,
       title: "4. Policy & Guardrail Engine",
-      desc: `Deterministic policy check: Amount (₹${customAmount.toLocaleString('en-IN')}) < Autonomous Cap (₹50,000). Retries (0/3) OK. Status: APPROVED.`,
+      desc: `Deterministic policy check: Amount (₹${numericAmount.toLocaleString('en-IN')}) < Autonomous Cap (₹50,000). Retries (0/3) OK. Status: APPROVED.`,
       icon: ShieldCheck,
       color: "border-cyan-500 bg-cyan-500/10 text-cyan-400"
     },
@@ -112,7 +115,7 @@ export const SingleLiveDemoModal: React.FC<SingleLiveDemoModalProps> = ({
     {
       num: 6,
       title: "6. Event Observed & Money Recovered!",
-      desc: `Razorpay payment_link.paid / payment.captured event received! ₹${customAmount.toLocaleString('en-IN')} successfully recovered for ${customName} and credited.`,
+      desc: `Razorpay payment_link.paid / payment.captured event received! ₹${numericAmount.toLocaleString('en-IN')} successfully recovered for ${customName} and credited.`,
       icon: CheckCircle2,
       color: "border-emerald-400 bg-emerald-500/20 text-emerald-300"
     }
@@ -184,7 +187,7 @@ export const SingleLiveDemoModal: React.FC<SingleLiveDemoModalProps> = ({
                   <input
                     type="number"
                     value={customAmount}
-                    onChange={(e) => setCustomAmount(Number(e.target.value))}
+                    onChange={(e) => setCustomAmount(e.target.value)}
                     placeholder="4999"
                     className="w-full bg-slate-900 border border-slate-800 rounded-lg pl-7 pr-3 py-1.5 text-xs text-white focus:border-cyan-500 focus:outline-none font-bold"
                   />
@@ -260,7 +263,7 @@ export const SingleLiveDemoModal: React.FC<SingleLiveDemoModalProps> = ({
                     <span className="font-black text-sm uppercase tracking-wider">AUTONOMOUS RECOVERY SUCCESSFUL</span>
                   </div>
                   <span className="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-mono font-bold border border-emerald-500/40">
-                    +₹{customAmount.toLocaleString('en-IN')} Credited
+                    +₹{numericAmount.toLocaleString('en-IN')} Credited
                   </span>
                 </div>
 
@@ -268,7 +271,7 @@ export const SingleLiveDemoModal: React.FC<SingleLiveDemoModalProps> = ({
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
                   <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800">
                     <span className="text-slate-500 block text-[10px] uppercase font-bold">Amount Recovered</span>
-                    <span className="font-black text-emerald-400 text-base">₹{customAmount.toLocaleString('en-IN')}</span>
+                    <span className="font-black text-emerald-400 text-base">₹{numericAmount.toLocaleString('en-IN')}</span>
                   </div>
                   <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800">
                     <span className="text-slate-500 block text-[10px] uppercase font-bold">Time to Recover</span>
