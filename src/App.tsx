@@ -52,12 +52,7 @@ export function App() {
 
   const [currentMerchant, setCurrentMerchant] = useState<{ merchant_id: string; name: string; company_name: string; email: string } | null>(() => {
     const saved = localStorage.getItem("recoverai_merchant_profile");
-    return saved ? JSON.parse(saved) : {
-      merchant_id: "mch_8829_techcorp",
-      name: "Rajesh Kumar",
-      company_name: "TechCorp India Pvt Ltd",
-      email: "rajesh@techcorp.in"
-    };
+    return saved ? JSON.parse(saved) : null;
   });
 
   // Listen to Firebase Auth state changes

@@ -9,9 +9,9 @@ class MerchantAccountModel(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     merchant_id = Column(String, unique=True, index=True, default=lambda: f"mch_{uuid.uuid4().hex[:8]}")
-    name = Column(String, default="Rajesh Kumar")
-    company_name = Column(String, default="TechCorp India Pvt Ltd")
-    email = Column(String, unique=True, index=True, default="rajesh@techcorp.in")
+    name = Column(String, default="Merchant Admin")
+    company_name = Column(String, default="Merchant Store")
+    email = Column(String, unique=True, index=True, default="merchant@example.com")
     razorpay_key_id = Column(String, nullable=True)
     razorpay_key_secret = Column(String, nullable=True)
     is_active = Column(Boolean, default=True)

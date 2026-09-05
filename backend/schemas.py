@@ -3,9 +3,9 @@ from typing import Optional, List, Dict, Any
 from datetime import datetime
 
 class MerchantLoginRequest(BaseModel):
-    email: str = "rajesh@techcorp.in"
-    name: Optional[str] = "Rajesh Kumar"
-    company_name: Optional[str] = "TechCorp India Pvt Ltd"
+    email: str = "merchant@example.com"
+    name: Optional[str] = "Merchant Admin"
+    company_name: Optional[str] = "Merchant Store"
 
 class MerchantProfileResponse(BaseModel):
     merchant_id: str

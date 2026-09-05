@@ -16,10 +16,10 @@ interface LoginModalProps {
 
 export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess }) => {
   const [isSignUp, setIsSignUp] = useState<boolean>(false);
-  const [email, setEmail] = useState<string>('rajesh@techcorp.in');
-  const [password, setPassword] = useState<string>('RecoverAI@2026');
-  const [name, setName] = useState<string>('Rajesh Kumar');
-  const [companyName, setCompanyName] = useState<string>('TechCorp India Pvt Ltd');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [name, setName] = useState<string>('');
+  const [companyName, setCompanyName] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string>('');
 
@@ -64,7 +64,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin
         const merchantProfile = {
           merchant_id: `mch_${fbUser.uid.substring(0, 8)}`,
           name: fbUser.displayName || name || 'Merchant Partner',
-          company_name: companyName || 'TechCorp India Pvt Ltd',
+          company_name: companyName || 'Merchant Business',
           email: fbUser.email || email
         };
 
@@ -90,9 +90,9 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin
 
       onLoginSuccess({
         merchant_id: "mch_8829_demo",
-        name,
-        company_name: companyName,
-        email
+        name: name || "Merchant Partner",
+        company_name: companyName || "Merchant Business",
+        email: email || "merchant@company.com"
       });
       onClose();
     } finally {
@@ -119,8 +119,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin
       onLoginSuccess({
         merchant_id: "mch_8829_google",
         name: "Merchant Partner",
-        company_name: "TechCorp India Pvt Ltd",
-        email: email || "rajesh@techcorp.in"
+        company_name: "Merchant Business",
+        email: email || "merchant@company.com"
       });
       onClose();
     } finally {
@@ -190,7 +190,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin
                     required
                     value={companyName}
                     onChange={(e) => setCompanyName(e.target.value)}
-                    placeholder="TechCorp India Pvt Ltd"
+                    placeholder="Acme Enterprises"
                     className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-3.5 py-2 text-xs text-white focus:border-cyan-500 focus:outline-none"
                   />
                 </div>
@@ -205,7 +205,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="Rajesh Kumar"
+                    placeholder="Merchant Name"
                     className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-3.5 py-2 text-xs text-white focus:border-cyan-500 focus:outline-none"
                   />
                 </div>
@@ -222,7 +222,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="rajesh@techcorp.in"
+                placeholder="merchant@company.com"
                 className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-3.5 py-2 text-xs text-white focus:border-cyan-500 focus:outline-none"
               />
             </div>
