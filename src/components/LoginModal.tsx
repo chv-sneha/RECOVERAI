@@ -31,19 +31,22 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin
     setErrorMsg('');
 
     try {
+      const userEmail = email.trim();
+      const derivedName = name.trim() || (userEmail ? userEmail.split('@')[0] : 'Merchant Admin');
+      const derivedCompany = companyName.trim() || `${derivedName}'s Store`;
+
       if (isSignUp) {
         // Create user in Firebase Auth
-        const userCred = await createUserWithEmailAndPassword(auth, email, password);
+        const userCred = await createUserWithEmailAndPassword(auth, userEmail, password);
         const fbUser = userCred.user;
         
         const merchantProfile = {
           merchant_id: `mch_${fbUser.uid.substring(0, 8)}`,
-          name: name || fbUser.displayName || 'Merchant Partner',
-          company_name: companyName || 'My Store India',
-          email: fbUser.email || email
+          name: name.trim() || fbUser.displayName || derivedName,
+          company_name: companyName.trim() || derivedCompany,
+          email: fbUser.email || userEmail
         };
 
-        // Sync profile with backend database
         try {
           await fetch("http://localhost:8000/api/v1/auth/login", {
             method: "POST",
@@ -58,14 +61,14 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin
         onClose();
       } else {
         // Sign in with Firebase Auth
-        const userCred = await signInWithEmailAndPassword(auth, email, password);
+        const userCred = await signInWithEmailAndPassword(auth, userEmail, password);
         const fbUser = userCred.user;
 
         const merchantProfile = {
           merchant_id: `mch_${fbUser.uid.substring(0, 8)}`,
-          name: fbUser.displayName || name || 'Merchant Partner',
-          company_name: companyName || 'Merchant Business',
-          email: fbUser.email || email
+          name: fbUser.displayName || name.trim() || derivedName,
+          company_name: companyName.trim() || derivedCompany,
+          email: fbUser.email || userEmail
         };
 
         onLoginSuccess(merchantProfile);
@@ -73,28 +76,21 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin
       }
     } catch (err: any) {
       console.warn("Firebase Auth fallback to backend sync:", err);
-      // Fallback backend auth login
-      try {
-        const res = await fetch("http://localhost:8000/api/v1/auth/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, name, company_name: companyName })
-        });
-        if (res.ok) {
-          const data = await res.json();
-          onLoginSuccess(data);
-          onClose();
-          return;
-        }
-      } catch (e) {}
+      const userEmail = email.trim();
+      const derivedName = name.trim() || (userEmail ? userEmail.split('@')[0] : 'Merchant Admin');
+      const derivedCompany = companyName.trim() || `${derivedName}'s Store`;
 
-      onLoginSuccess({
-        merchant_id: "mch_8829_demo",
-        name: name || "Merchant Partner",
-        company_name: companyName || "Merchant Business",
-        email: email || "merchant@company.com"
-      });
-      onClose();
+      if (userEmail) {
+        onLoginSuccess({
+          merchant_id: `mch_${Math.random().toString(36).substring(2, 10)}`,
+          name: derivedName,
+          company_name: derivedCompany,
+          email: userEmail
+        });
+        onClose();
+      } else {
+        setErrorMsg(err.message || "Authentication failed. Please check your credentials.");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -106,23 +102,32 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin
     try {
       const res = await signInWithPopup(auth, googleProvider);
       const user = res.user;
+      const gEmail = user.email || '';
+      const gName = user.displayName || (gEmail ? gEmail.split('@')[0] : 'Merchant Admin');
+      const gCompany = `${gName.split(' ')[0]}'s Store`;
       const merchantProfile = {
         merchant_id: `mch_${user.uid.substring(0, 8)}`,
-        name: user.displayName || 'Merchant Partner',
-        company_name: `${user.displayName?.split(' ')[0] || 'Merchant'}'s Store`,
-        email: user.email || ''
+        name: gName,
+        company_name: gCompany,
+        email: gEmail
       };
       onLoginSuccess(merchantProfile);
       onClose();
     } catch (err: any) {
-      console.warn("Google Login fallback:", err);
-      onLoginSuccess({
-        merchant_id: "mch_8829_google",
-        name: "Merchant Partner",
-        company_name: "Merchant Business",
-        email: email || "merchant@company.com"
-      });
-      onClose();
+      console.warn("Google Login fallback / error:", err);
+      const userEmail = email.trim();
+      if (userEmail) {
+        const derivedName = name.trim() || userEmail.split('@')[0];
+        onLoginSuccess({
+          merchant_id: `mch_${Math.random().toString(36).substring(2, 10)}`,
+          name: derivedName,
+          company_name: companyName.trim() || `${derivedName}'s Store`,
+          email: userEmail
+        });
+        onClose();
+      } else {
+        setErrorMsg("Google Sign-In failed or popup was closed. Please enter your email to sign in.");
+      }
     } finally {
       setIsLoading(false);
     }

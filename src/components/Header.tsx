@@ -132,9 +132,9 @@ export const Header: React.FC<HeaderProps> = ({
             className="px-4 py-2 rounded-full bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-sky-500/40 text-slate-200 text-xs font-bold transition flex items-center gap-2 active:scale-95 shadow-lg"
           >
             <div className="w-6 h-6 rounded-full bg-gradient-to-r from-sky-400 to-blue-600 flex items-center justify-center text-white font-black text-[10px]">
-              {currentMerchant?.name ? currentMerchant.name.charAt(0).toUpperCase() : 'M'}
+              {currentMerchant?.name ? currentMerchant.name.charAt(0).toUpperCase() : (currentMerchant?.email ? currentMerchant.email.charAt(0).toUpperCase() : 'M')}
             </div>
-            <span>{currentMerchant?.company_name ? currentMerchant.company_name.split(' ')[0] : 'TechCorp'}</span>
+            <span>{currentMerchant?.company_name ? currentMerchant.company_name.split(' ')[0] : (currentMerchant?.name ? currentMerchant.name.split(' ')[0] : 'Merchant')}</span>
             <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform ${dropdownOpen ? 'rotate-180 text-sky-400' : ''}`} />
           </button>
 
@@ -145,18 +145,18 @@ export const Header: React.FC<HeaderProps> = ({
               <div className="px-3 pb-3 border-b border-slate-800/80">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-400 via-cyan-500 to-blue-600 flex items-center justify-center text-white font-black text-sm shadow-md">
-                    {currentMerchant?.name ? currentMerchant.name.charAt(0).toUpperCase() : 'M'}
+                    {currentMerchant?.name ? currentMerchant.name.charAt(0).toUpperCase() : (currentMerchant?.email ? currentMerchant.email.charAt(0).toUpperCase() : 'M')}
                   </div>
                   <div className="overflow-hidden">
                     <h4 className="font-bold text-sm text-white truncate">
-                      {currentMerchant?.company_name || 'TechCorp India Pvt Ltd'}
+                      {currentMerchant?.company_name || currentMerchant?.name || 'Merchant Account'}
                     </h4>
                     <p className="text-[11px] text-slate-400 flex items-center gap-1 truncate">
                       <Mail className="w-3 h-3 text-slate-500 shrink-0" />
-                      {currentMerchant?.email || 'admin@techcorp.in'}
+                      {currentMerchant?.email || 'No email provided'}
                     </p>
                     <p className="text-[10px] font-mono text-slate-500 mt-0.5 truncate">
-                      ID: {currentMerchant?.merchant_id || 'merch_techcorp_test_99'}
+                      ID: {currentMerchant?.merchant_id || 'mch_active'}
                     </p>
                   </div>
                 </div>

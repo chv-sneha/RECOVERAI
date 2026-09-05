@@ -25,20 +25,28 @@ export const MerchantProfileModal: React.FC<MerchantProfileModalProps> = ({
   const [activeSection, setActiveSection] = useState<string>(activeSubSection);
   const [copiedKey, setCopiedKey] = useState<boolean>(false);
 
-  // Form states
-  const [name, setName] = useState(currentMerchant?.name || 'Rajesh Kumar');
-  const [companyName, setCompanyName] = useState(currentMerchant?.company_name || 'TechCorp India Pvt Ltd');
-  const [email, setEmail] = useState(currentMerchant?.email || 'admin@techcorp.in');
+  // Form states initialized dynamically
+  const [name, setName] = useState(currentMerchant?.name || '');
+  const [companyName, setCompanyName] = useState(currentMerchant?.company_name || '');
+  const [email, setEmail] = useState(currentMerchant?.email || '');
   const [phone, setPhone] = useState('+91 98765 43210');
   const [gstin, setGstin] = useState('27AAACT1234F1Z5');
   const [saveSuccess, setSaveSuccess] = useState(false);
+
+  React.useEffect(() => {
+    if (currentMerchant) {
+      setName(currentMerchant.name || '');
+      setCompanyName(currentMerchant.company_name || '');
+      setEmail(currentMerchant.email || '');
+    }
+  }, [currentMerchant]);
 
   if (!isOpen) return null;
 
   const handleSaveProfile = (e: React.FormEvent) => {
     e.preventDefault();
     onUpdateMerchant({
-      merchant_id: currentMerchant?.merchant_id || 'merch_techcorp_test_99',
+      merchant_id: currentMerchant?.merchant_id || 'mch_active',
       name,
       company_name: companyName,
       email
@@ -71,12 +79,12 @@ export const MerchantProfileModal: React.FC<MerchantProfileModalProps> = ({
             {/* Merchant Identity Header */}
             <div className="flex items-center gap-3.5 pb-6 border-b border-slate-800/80">
               <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-sky-400 via-cyan-500 to-blue-600 flex items-center justify-center text-white font-black text-xl shadow-lg shadow-sky-500/20">
-                {name ? name.charAt(0).toUpperCase() : 'M'}
+                {name ? name.charAt(0).toUpperCase() : (email ? email.charAt(0).toUpperCase() : 'M')}
               </div>
               <div className="overflow-hidden">
-                <h3 className="font-extrabold text-base text-white truncate">{companyName}</h3>
-                <p className="text-xs text-slate-400 truncate">{email}</p>
-                <p className="text-[10px] font-mono text-sky-400 mt-1 truncate">ID: {currentMerchant?.merchant_id || 'merch_techcorp_test_99'}</p>
+                <h3 className="font-extrabold text-base text-white truncate">{companyName || name || 'Merchant Account'}</h3>
+                <p className="text-xs text-slate-400 truncate">{email || 'No email provided'}</p>
+                <p className="text-[10px] font-mono text-sky-400 mt-1 truncate">ID: {currentMerchant?.merchant_id || 'mch_active'}</p>
               </div>
             </div>
 
@@ -201,7 +209,7 @@ export const MerchantProfileModal: React.FC<MerchantProfileModalProps> = ({
                     <label className="block text-slate-400 font-medium mb-1">Merchant ID</label>
                     <input 
                       type="text"
-                      value={currentMerchant?.merchant_id || 'merch_techcorp_test_99'}
+                      value={currentMerchant?.merchant_id || 'mch_active'}
                       disabled
                       className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950/50 border border-slate-800/80 text-slate-500 font-mono cursor-not-allowed"
                     />
