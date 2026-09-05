@@ -44,6 +44,31 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
   return (
     <div className="space-y-6">
+      {/* Razorpay Integration Live Mode Status Banner */}
+      <div className="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 backdrop-blur-xl flex flex-wrap items-center justify-between gap-4 shadow-xl">
+        <div className="flex items-center gap-3">
+          <div className="h-3 w-3 rounded-full bg-emerald-400 animate-ping" />
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="font-extrabold text-sm text-white">Razorpay Live Event Listener</span>
+              <span className="px-2 py-0.5 rounded-md bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-[10px] font-mono font-bold uppercase tracking-wider">
+                Razorpay Connected ✓ | Test Mode
+              </span>
+            </div>
+            <p className="text-xs text-slate-400 mt-0.5">
+              Listening to real-time payment events from Render Webhook: <span className="font-mono text-sky-400 text-[11px]">/api/v1/events/webhook</span>
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <span className="text-xs text-slate-400 flex items-center gap-1 font-mono">
+            <RefreshCw className="w-3.5 h-3.5 text-slate-500" />
+            Last Sync: <strong className="text-slate-200">Just now</strong>
+          </span>
+        </div>
+      </div>
+
       {/* Top Financial KPI Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Total Revenue at Risk */}

@@ -59,6 +59,27 @@ def test_razorpay_connection() -> dict:
             "message": f"Connection error: {str(e)}"
         }
 
+def fetch_razorpay_payments(count: int = 20) -> list:
+    """
+    Fetches real transactions/orders from connected Razorpay account via REST API.
+    """
+    key_id, key_secret = get_razorpay_keys()
+    if not is_real_razorpay_configured():
+        return []
+    
+    try:
+        url = f"https://api.razorpay.com/v1/payments?count={count}"
+        res = requests.get(url, auth=HTTPBasicAuth(key_id, key_secret), timeout=8)
+        if res.status_code == 200:
+            data = res.json()
+            return data.get("items", [])
+        else:
+            logger.warning(f"Razorpay Payments fetch API returned HTTP {res.status_code}")
+            return []
+    except Exception as e:
+        logger.error(f"Error fetching Razorpay payments: {e}")
+        return []
+
 def execute_razorpay_action(action_type: str, case_data: dict, parameters: dict = None) -> dict:
     """
     Executes legitimate Razorpay REST API call (or fallback sandbox execution).

@@ -23,7 +23,7 @@ from .schemas import (
 )
 from .services.orchestrator import RecoveryOrchestrator
 from .services.simulator import run_batch_simulation
-from .services.razorpay_adapter import test_razorpay_connection, is_real_razorpay_configured
+from .services.razorpay_adapter import test_razorpay_connection, is_real_razorpay_configured, fetch_razorpay_payments
 
 # Create Tables
 Base.metadata.create_all(bind=engine)
@@ -146,12 +146,51 @@ def get_merchant_status(db: Session = Depends(get_db)):
     status = test_razorpay_connection()
     merchant = db.query(MerchantAccountModel).first()
     
-    status["webhook_endpoint"] = "http://127.0.0.1:8000/api/v1/events/webhook"
+    status["webhook_endpoint"] = "https://recoverai-backend-mn6i.onrender.com/api/v1/events/webhook"
     status["webhook_secret_configured"] = bool(os.getenv("RAZORPAY_WEBHOOK_SECRET"))
     if merchant:
         status["merchant_name"] = merchant.company_name
         status["merchant_id"] = merchant.merchant_id
     return status
+
+@app.post("/api/v1/razorpay/sync")
+async def sync_razorpay_transactions(db: Session = Depends(get_db)):
+    """
+    Fetches real transactions from connected Razorpay account and ingests any failed transactions as active cases.
+    """
+    items = fetch_razorpay_payments(count=25)
+    orchestrator = RecoveryOrchestrator(db, websocket_broadcast_func=manager.broadcast)
+    processed_cases = []
+    
+    for item in items:
+        status = item.get("status")
+        payment_id = item.get("id")
+        amount = item.get("amount", 0) / 100.0
+        email = item.get("email", "merchant_customer@example.com")
+        error_desc = item.get("error_description", "Payment Declined by Issuer Bank")
+        
+        if status in ["failed", "authorized"]:
+            payload = WebhookEventPayload(
+                event_type="payment.failed" if status == "failed" else "payment.authorized",
+                source="RAZORPAY_API_SYNC",
+                customer_id=email.split("@")[0],
+                order_id=item.get("order_id") or f"order_{payment_id}",
+                payment_id=payment_id,
+                amount=amount,
+                currency=item.get("currency", "INR"),
+                failure_reason=error_desc,
+                failure_code=item.get("error_code")
+            )
+            case = await orchestrator.process_incoming_event(payload)
+            if case:
+                processed_cases.append(case.case_id)
+                
+    return {
+        "status": "SUCCESS",
+        "total_fetched": len(items),
+        "synced_cases_count": len(processed_cases),
+        "cases": processed_cases
+    }
 
 # Dashboard Financial KPIs Endpoint
 @app.get("/api/v1/metrics")
