@@ -38,7 +38,6 @@ export function App() {
   const [isSingleDemoOpen, setIsSingleDemoOpen] = useState<boolean>(false);
   const [isBatchSimOpen, setIsBatchSimOpen] = useState<boolean>(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
-  const [isProfileModalOpen, setIsProfileModalOpen] = useState<boolean>(false);
   const [activeProfileSection, setActiveProfileSection] = useState<string>('profile');
   const [wsConnected, setWsConnected] = useState<boolean>(false);
 
@@ -346,7 +345,7 @@ export function App() {
         onOpenLogin={handleLogout}
         onOpenProfileModal={(section) => {
           if (section) setActiveProfileSection(section);
-          setIsProfileModalOpen(true);
+          setActiveTab('profile');
         }}
       />
 
@@ -389,6 +388,21 @@ export function App() {
           <AuditLogView logs={auditLogs} />
         )}
 
+        {activeTab === 'profile' && (
+          <MerchantProfileModal
+            isOpen={true}
+            onClose={() => setActiveTab('dashboard')}
+            currentMerchant={currentMerchant}
+            onUpdateMerchant={(updated) => {
+              setCurrentMerchant(updated);
+              localStorage.setItem("recoverai_merchant_profile", JSON.stringify(updated));
+            }}
+            onLogout={handleLogout}
+            activeSubSection={activeProfileSection}
+            isFullPage={true}
+          />
+        )}
+
         {activeTab === 'batch' && (
           <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 text-center space-y-4">
             <h2 className="text-xl font-bold text-white">Batch Simulation & Scenario Generator</h2>
@@ -427,18 +441,6 @@ export function App() {
         isOpen={isLoginModalOpen}
         onClose={() => setIsLoginModalOpen(false)}
         onLoginSuccess={handleLoginSuccess}
-      />
-
-      <MerchantProfileModal
-        isOpen={isProfileModalOpen}
-        onClose={() => setIsProfileModalOpen(false)}
-        currentMerchant={currentMerchant}
-        onUpdateMerchant={(updated) => {
-          setCurrentMerchant(updated);
-          localStorage.setItem("recoverai_merchant_profile", JSON.stringify(updated));
-        }}
-        onLogout={handleLogout}
-        activeSubSection={activeProfileSection}
       />
 
       <ChatbotWidget />
