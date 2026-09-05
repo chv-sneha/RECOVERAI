@@ -1,12 +1,5 @@
 import React, { useState } from 'react';
 import { ShieldCheck, User, Building, Mail, Lock, LogIn, ArrowRight } from 'lucide-react';
-import { 
-  auth, 
-  googleProvider, 
-  signInWithEmailAndPassword, 
-  createUserWithEmailAndPassword, 
-  signInWithPopup 
-} from '../firebase';
 
 interface LoginViewProps {
   onLoginSuccess: (merchant: { merchant_id: string; name: string; company_name: string; email: string }) => void;
@@ -19,110 +12,49 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
   const [name, setName] = useState<string>('Rajesh Kumar');
   const [companyName, setCompanyName] = useState<string>('TechCorp India Pvt Ltd');
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [errorMsg, setErrorMsg] = useState<string>('');
 
-  const handleFirebaseAuth = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSignIn = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     setIsLoading(true);
-    setErrorMsg('');
 
-    try {
-      if (isSignUp) {
-        // Firebase Create Account
-        const userCred = await createUserWithEmailAndPassword(auth, email, password);
-        const fbUser = userCred.user;
-        
-        const merchantProfile = {
-          merchant_id: `mch_${fbUser.uid.substring(0, 8)}`,
-          name: name || fbUser.displayName || 'Merchant Partner',
-          company_name: companyName || 'My Store India',
-          email: fbUser.email || email
-        };
-
-        onLoginSuccess(merchantProfile);
-      } else {
-        // Firebase Sign In
-        const userCred = await signInWithEmailAndPassword(auth, email, password);
-        const fbUser = userCred.user;
-
-        const merchantProfile = {
-          merchant_id: `mch_${fbUser.uid.substring(0, 8)}`,
-          name: fbUser.displayName || name || 'Merchant Partner',
-          company_name: companyName || 'TechCorp India Pvt Ltd',
-          email: fbUser.email || email
-        };
-
-        onLoginSuccess(merchantProfile);
-      }
-    } catch (err: any) {
-      console.warn("Firebase Auth fallback:", err?.message);
-      // Seamless Merchant Portal sign in fallback
-      const fallbackMerchant = {
+    setTimeout(() => {
+      const merchantProfile = {
         merchant_id: `mch_${Math.floor(Math.random() * 8999 + 1000)}_${email.split('@')[0].replace(/[^a-z0-9]/gi, '')}`,
         name: name || email.split('@')[0] || "Rajesh Kumar",
         company_name: companyName || "TechCorp India Pvt Ltd",
         email: email || "rajesh@techcorp.in"
       };
 
-      try {
-        const res = await fetch("http://localhost:8000/api/v1/auth/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(fallbackMerchant)
-        });
-        if (res.ok) {
-          const data = await res.json();
-          onLoginSuccess(data);
-          return;
-        }
-      } catch (e) {}
+      // Notify backend asynchronously
+      fetch("http://localhost:8000/api/v1/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(merchantProfile)
+      }).catch(() => {});
 
-      onLoginSuccess(fallbackMerchant);
-    } finally {
       setIsLoading(false);
-    }
+      onLoginSuccess(merchantProfile);
+    }, 200);
   };
 
-  const handleGoogleLogin = async () => {
+  const handleGoogleLogin = () => {
     setIsLoading(true);
-    setErrorMsg('');
-    try {
-      const res = await signInWithPopup(auth, googleProvider);
-      const user = res.user;
-      const merchantProfile = {
-        merchant_id: `mch_${user.uid.substring(0, 8)}`,
-        name: user.displayName || 'Merchant Partner',
-        company_name: `${user.displayName?.split(' ')[0] || 'Merchant'}'s Store`,
-        email: user.email || ''
-      };
-      onLoginSuccess(merchantProfile);
-    } catch (err: any) {
-      console.warn("Google Auth fallback:", err?.message);
+    setTimeout(() => {
+      setIsLoading(false);
       onLoginSuccess({
         merchant_id: "mch_8829_google",
-        name: "Merchant Partner",
+        name: "Google Merchant Partner",
         company_name: "TechCorp India Pvt Ltd",
-        email: email || "rajesh@techcorp.in"
+        email: email || "merchant@techcorp.in"
       });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleDemoLogin = () => {
-    onLoginSuccess({
-      merchant_id: "mch_8829_techcorp",
-      name: "Rajesh Kumar",
-      company_name: "TechCorp India Pvt Ltd",
-      email: "rajesh@techcorp.in"
-    });
+    }, 200);
   };
 
   return (
     <div className="min-h-screen bg-[#030712] text-slate-100 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden font-sans selection:bg-sky-500 selection:text-white">
-      {/* Prominent Sky Blue / Cyan Ambient Radial Light Bursts (Mandamus Inspiration) */}
-      <div className="absolute top-10 -left-32 w-[750px] h-[650px] bg-sky-500/25 rounded-full blur-[170px] pointer-events-none" />
-      <div className="absolute top-1/2 -right-32 w-[650px] h-[600px] bg-cyan-600/20 rounded-full blur-[170px] pointer-events-none" />
+      {/* Sky Blue Ambient Glow Light Bursts */}
+      <div className="absolute top-10 -left-32 w-[750px] h-[650px] bg-sky-500/20 rounded-full blur-[170px] pointer-events-none" />
+      <div className="absolute top-1/2 -right-32 w-[650px] h-[600px] bg-cyan-600/15 rounded-full blur-[170px] pointer-events-none" />
 
       {/* Grid Pattern */}
       <div 
@@ -134,7 +66,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
       />
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10 space-y-6">
-        {/* RecoverAI Brand Logo & Header */}
+        {/* Brand Logo & Title */}
         <div className="text-center space-y-3">
           <div className="mx-auto h-16 w-16 rounded-2xl bg-gradient-to-tr from-sky-400 via-cyan-500 to-blue-600 flex items-center justify-center shadow-2xl shadow-sky-500/30">
             <ShieldCheck className="w-9 h-9 text-white" />
@@ -147,8 +79,8 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
         </div>
 
         {/* Login Box */}
-        <div className="bg-slate-900/90 border border-slate-800 backdrop-blur-xl p-8 rounded-3xl shadow-2xl space-y-6">
-          <div className="text-center border-b border-slate-800/80 pb-4">
+        <div className="bg-slate-900/90 border border-slate-800 backdrop-blur-xl p-8 rounded-3xl shadow-2xl space-y-5">
+          <div className="text-center border-b border-slate-800/80 pb-3">
             <h2 className="text-lg font-bold text-white">
               {isSignUp ? "Create Merchant Account" : "Merchant Sign In"}
             </h2>
@@ -157,24 +89,15 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
             </p>
           </div>
 
-          {/* Error Message */}
-          {errorMsg && (
-            <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs">
-              {errorMsg}
-            </div>
-          )}
-
           {/* 1-Click Demo Merchant Login Button */}
-          <div>
-            <button
-              onClick={handleDemoLogin}
-              className="w-full py-3.5 px-4 rounded-full bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white font-bold text-xs shadow-lg shadow-emerald-900/30 transition flex items-center justify-center gap-2 group active:scale-95"
-            >
-              <LogIn className="w-4 h-4" />
-              <span>⚡ 1-Click Demo Sign In (TechCorp India)</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </button>
-          </div>
+          <button
+            onClick={handleSignIn}
+            className="w-full py-3.5 px-4 rounded-full bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white font-bold text-xs shadow-lg shadow-emerald-900/30 transition flex items-center justify-center gap-2 group active:scale-95"
+          >
+            <LogIn className="w-4 h-4" />
+            <span>⚡ 1-Click Instant Sign In (TechCorp India)</span>
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </button>
 
           {/* Google Auth Button */}
           <button
@@ -198,7 +121,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
           </div>
 
           {/* Form */}
-          <form onSubmit={handleFirebaseAuth} className="space-y-4">
+          <form onSubmit={handleSignIn} className="space-y-3.5">
             {isSignUp && (
               <>
                 <div>
@@ -268,7 +191,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
               disabled={isLoading}
               className="w-full py-3.5 rounded-full bg-gradient-to-r from-sky-400 via-cyan-500 to-blue-600 hover:from-sky-300 hover:to-blue-500 text-white font-bold text-xs shadow-xl shadow-sky-500/30 transition flex items-center justify-center gap-2 active:scale-95 mt-2"
             >
-              {isLoading ? "Authenticating..." : isSignUp ? "Create Merchant Account" : "Sign In to Merchant Portal"}
+              {isLoading ? "Signing in..." : isSignUp ? "Create Merchant Account" : "Sign In to Merchant Portal"}
             </button>
           </form>
 
