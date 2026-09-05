@@ -9,6 +9,7 @@ import { SingleLiveDemoModal } from './components/SingleLiveDemoModal';
 import { BatchSimulationModal } from './components/BatchSimulationModal';
 import { CaseDetailModal } from './components/CaseDetailModal';
 import { LoginModal } from './components/LoginModal';
+import { MerchantProfileModal } from './components/MerchantProfileModal';
 import { LoginView } from './components/LoginView';
 import { ConnectRazorpayView } from './components/ConnectRazorpayView';
 import { ChatbotWidget } from './components/ChatbotWidget';
@@ -37,6 +38,8 @@ export function App() {
   const [isSingleDemoOpen, setIsSingleDemoOpen] = useState<boolean>(false);
   const [isBatchSimOpen, setIsBatchSimOpen] = useState<boolean>(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState<boolean>(false);
+  const [activeProfileSection, setActiveProfileSection] = useState<string>('profile');
   const [wsConnected, setWsConnected] = useState<boolean>(false);
 
   // Authentication state
@@ -341,6 +344,10 @@ export function App() {
         activeEscalationCount={cases.filter(c => c.state === 'ESCALATED' || c.is_escalated).length}
         currentMerchant={currentMerchant}
         onOpenLogin={handleLogout}
+        onOpenProfileModal={(section) => {
+          if (section) setActiveProfileSection(section);
+          setIsProfileModalOpen(true);
+        }}
       />
 
       {/* Main Container */}
@@ -420,6 +427,18 @@ export function App() {
         isOpen={isLoginModalOpen}
         onClose={() => setIsLoginModalOpen(false)}
         onLoginSuccess={handleLoginSuccess}
+      />
+
+      <MerchantProfileModal
+        isOpen={isProfileModalOpen}
+        onClose={() => setIsProfileModalOpen(false)}
+        currentMerchant={currentMerchant}
+        onUpdateMerchant={(updated) => {
+          setCurrentMerchant(updated);
+          localStorage.setItem("recoverai_merchant_profile", JSON.stringify(updated));
+        }}
+        onLogout={handleLogout}
+        activeSubSection={activeProfileSection}
       />
 
       <ChatbotWidget />

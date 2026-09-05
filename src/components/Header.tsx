@@ -30,6 +30,7 @@ interface HeaderProps {
   activeEscalationCount: number;
   currentMerchant: { merchant_id: string; name: string; company_name: string; email: string } | null;
   onOpenLogin: () => void;
+  onOpenProfileModal: (section?: string) => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -38,7 +39,8 @@ export const Header: React.FC<HeaderProps> = ({
   onTriggerSingleDemo,
   activeEscalationCount,
   currentMerchant,
-  onOpenLogin
+  onOpenLogin,
+  onOpenProfileModal
 }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -165,42 +167,42 @@ export const Header: React.FC<HeaderProps> = ({
               {/* Business & System Controls List */}
               <div className="py-2 text-xs space-y-0.5 border-b border-slate-800/80">
                 <button 
-                  onClick={() => { setActiveTab('control'); setDropdownOpen(false); }}
+                  onClick={() => { setDropdownOpen(false); onOpenProfileModal('profile'); }}
                   className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-900 text-slate-300 hover:text-white transition text-left"
                 >
                   <Building className="w-4 h-4 text-sky-400" />
                   <span>View & Edit Business Profile</span>
                 </button>
                 <button 
-                  onClick={() => { setActiveTab('control'); setDropdownOpen(false); }}
+                  onClick={() => { setDropdownOpen(false); onOpenProfileModal('razorpay'); }}
                   className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-900 text-slate-300 hover:text-white transition text-left"
                 >
                   <Key className="w-4 h-4 text-emerald-400" />
                   <span>Razorpay Integration & Keys</span>
                 </button>
                 <button 
-                  onClick={() => { setActiveTab('control'); setDropdownOpen(false); }}
+                  onClick={() => { setDropdownOpen(false); onOpenProfileModal('agent'); }}
                   className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-900 text-slate-300 hover:text-white transition text-left"
                 >
                   <Sliders className="w-4 h-4 text-cyan-400" />
                   <span>Agent Policy & Guardrails</span>
                 </button>
                 <button 
-                  onClick={() => { setActiveTab('audit'); setDropdownOpen(false); }}
+                  onClick={() => { setDropdownOpen(false); onOpenProfileModal('webhook'); }}
                   className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-900 text-slate-300 hover:text-white transition text-left"
                 >
                   <Activity className="w-4 h-4 text-indigo-400" />
                   <span>API & Webhook Live Status</span>
                 </button>
                 <button 
-                  onClick={() => { setActiveTab('control'); setDropdownOpen(false); }}
+                  onClick={() => { setDropdownOpen(false); onOpenProfileModal('notifications'); }}
                   className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-900 text-slate-300 hover:text-white transition text-left"
                 >
                   <Bell className="w-4 h-4 text-amber-400" />
                   <span>Notification Preferences</span>
                 </button>
                 <button 
-                  onClick={() => { setActiveTab('control'); setDropdownOpen(false); }}
+                  onClick={() => { setDropdownOpen(false); onOpenProfileModal('security'); }}
                   className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-900 text-slate-300 hover:text-white transition text-left"
                 >
                   <Lock className="w-4 h-4 text-purple-400" />
@@ -210,15 +212,13 @@ export const Header: React.FC<HeaderProps> = ({
 
               {/* Bottom Actions: Help & Logout */}
               <div className="pt-2 text-xs space-y-0.5">
-                <a 
-                  href="https://razorpay.com/docs/" 
-                  target="_blank" 
-                  rel="noreferrer"
-                  className="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-900 text-slate-400 hover:text-white transition"
+                <button 
+                  onClick={() => { setDropdownOpen(false); onOpenProfileModal('help'); }}
+                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-900 text-slate-400 hover:text-white transition text-left"
                 >
                   <HelpCircle className="w-4 h-4 text-slate-500" />
                   <span>Help & Documentation</span>
-                </a>
+                </button>
                 <button
                   onClick={() => { setDropdownOpen(false); onOpenLogin(); }}
                   className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-rose-950/40 text-rose-400 hover:text-rose-300 font-bold transition text-left"
