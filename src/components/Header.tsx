@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { 
-  ShieldCheck, 
+  Sparkles, 
   Play, 
   Zap, 
   AlertTriangle, 
@@ -74,7 +74,7 @@ export const Header: React.FC<HeaderProps> = ({
           title="Return to RecoverAI Main Dashboard"
         >
           <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-sky-400 via-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-sky-500/20 group-hover:scale-105 transition-transform">
-            <ShieldCheck className="w-5 h-5 text-white" />
+            <Sparkles className="w-5 h-5 text-white animate-pulse" />
           </div>
           <span className="font-black text-2xl text-white tracking-widest uppercase">RECOVERAI</span>
         </div>

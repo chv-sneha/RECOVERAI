@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { 
-  ShieldCheck, Zap, Lock, Activity, Bot
+  Sparkles, Zap, Lock, Activity, Bot
 } from 'lucide-react';
 import { LoginModal } from './LoginModal';
 
@@ -40,7 +40,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
           {/* Logo Brand Name - Clean Uppercase Bold (Mandamus Screenshot) */}
           <div className="flex items-center gap-3">
             <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-sky-400 via-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-sky-500/30">
-              <ShieldCheck className="w-5 h-5 text-white" />
+              <Sparkles className="w-5 h-5 text-white" />
             </div>
             <span className="font-black text-2xl text-white tracking-widest uppercase">RECOVERAI</span>
           </div>
