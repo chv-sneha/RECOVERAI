@@ -235,6 +235,11 @@ export const SingleLiveDemoModal: React.FC<SingleLiveDemoModalProps> = ({
                       EXECUTING
                     </span>
                   )}
+                  {isDone && step.num === 6 && (
+                    <span className="px-2 py-0.5 rounded text-[10px] font-extrabold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                      RECOVERED ✓
+                    </span>
+                  )}
                 </div>
               );
             })}
