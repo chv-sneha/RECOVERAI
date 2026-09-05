@@ -280,7 +280,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
       <section id="about" className="py-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto border-t border-slate-900 text-center relative z-10">
         <div className="bg-slate-900/60 border border-slate-800 rounded-3xl p-10 space-y-6 shadow-2xl">
           <span className="px-3.5 py-1 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-xs font-bold">
-            Razorpay Hackathon Track 03
+            Autonomous Agent
           </span>
           <h2 className="text-3xl font-black text-white">Autonomous Revenue Recovery</h2>
           <p className="text-xs sm:text-sm text-slate-300 max-w-2xl mx-auto leading-relaxed">
@@ -384,7 +384,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
 
       {/* Footer */}
       <footer className="border-t border-slate-900 py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center text-xs text-slate-500 z-10 relative">
-        <p>RECOVERAI — Razorpay AI Revenue Recovery Challenge | Track 03</p>
+        <p>RECOVERAI — Real-Time Autonomous Revenue Recovery Platform</p>
       </footer>
     </div>
   );

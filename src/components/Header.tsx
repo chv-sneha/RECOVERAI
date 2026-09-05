@@ -52,12 +52,7 @@ export const Header: React.FC<HeaderProps> = ({
             <ShieldCheck className="w-6 h-6 text-white" />
           </div>
           <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-xl font-bold text-white tracking-tight">RecoverAI</h1>
-              <span className="px-2 py-0.5 rounded text-xs font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
-                Razorpay Track 03
-              </span>
-            </div>
+            <h1 className="text-xl font-bold text-white tracking-tight">RecoverAI</h1>
             <p className="text-xs text-slate-400">Real-Time Autonomous Revenue Recovery Agent</p>
           </div>
         </div>
