@@ -10,6 +10,7 @@ import { BatchSimulationModal } from './components/BatchSimulationModal';
 import { CaseDetailModal } from './components/CaseDetailModal';
 import { LoginModal } from './components/LoginModal';
 import { LoginView } from './components/LoginView';
+import { ConnectRazorpayView } from './components/ConnectRazorpayView';
 import { ChatbotWidget } from './components/ChatbotWidget';
 import { auth, onAuthStateChanged, signOut } from './firebase';
 
@@ -38,9 +39,13 @@ export function App() {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
   const [wsConnected, setWsConnected] = useState<boolean>(false);
 
-  // Authentication state - Always start on Intro Landing Page unless explicitly authenticated in session
+  // Authentication state
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
     return sessionStorage.getItem("recoverai_session_active") === "true";
+  });
+
+  const [hasConnectedRazorpay, setHasConnectedRazorpay] = useState<boolean>(() => {
+    return sessionStorage.getItem("recoverai_razorpay_connected") === "true";
   });
 
   const [currentMerchant, setCurrentMerchant] = useState<{ merchant_id: string; name: string; company_name: string; email: string } | null>(() => {
@@ -78,10 +83,17 @@ export function App() {
     localStorage.setItem("recoverai_merchant_profile", JSON.stringify(merchant));
   };
 
+  const handleConnectSuccess = () => {
+    setHasConnectedRazorpay(true);
+    sessionStorage.setItem("recoverai_razorpay_connected", "true");
+  };
+
   const handleLogout = () => {
     signOut(auth).catch(() => {});
     setIsLoggedIn(false);
+    setHasConnectedRazorpay(false);
     sessionStorage.removeItem("recoverai_session_active");
+    sessionStorage.removeItem("recoverai_razorpay_connected");
     localStorage.removeItem("recoverai_merchant_logged_in");
   };
 
@@ -294,11 +306,24 @@ export function App() {
     };
   };
 
-  // Render Login Landing Page if not logged in
+  // Step 1: Render Login Page if not authenticated (Bypass strictly blocked!)
   if (!isLoggedIn) {
     return (
       <>
         <LoginView onLoginSuccess={handleLoginSuccess} />
+        <ChatbotWidget />
+      </>
+    );
+  }
+
+  // Step 2: Render Connect Razorpay Account wizard if not connected
+  if (!hasConnectedRazorpay) {
+    return (
+      <>
+        <ConnectRazorpayView 
+          merchant={currentMerchant} 
+          onConnectSuccess={handleConnectSuccess} 
+        />
         <ChatbotWidget />
       </>
     );
