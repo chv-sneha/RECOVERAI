@@ -10,6 +10,7 @@ import { BatchSimulationModal } from './components/BatchSimulationModal';
 import { CaseDetailModal } from './components/CaseDetailModal';
 import { LoginModal } from './components/LoginModal';
 import { LoginView } from './components/LoginView';
+import { ChatbotWidget } from './components/ChatbotWidget';
 
 import type { 
   RecoveryCase, DashboardMetrics, AgentActivityMessage, 
@@ -274,7 +275,12 @@ export function App() {
 
   // Render Login Landing Page if not logged in
   if (!isLoggedIn) {
-    return <LoginView onLoginSuccess={handleLoginSuccess} />;
+    return (
+      <>
+        <LoginView onLoginSuccess={handleLoginSuccess} />
+        <ChatbotWidget />
+      </>
+    );
   }
 
   return (
@@ -369,6 +375,8 @@ export function App() {
         onClose={() => setIsLoginModalOpen(false)}
         onLoginSuccess={handleLoginSuccess}
       />
+
+      <ChatbotWidget />
     </div>
   );
 }
