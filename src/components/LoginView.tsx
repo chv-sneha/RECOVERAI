@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { 
-  ShieldCheck, User, Building, Mail, Zap, Lock, Activity, Bot, ChevronRight
+  ShieldCheck, User, Building, Mail, Zap, Lock, Activity, Bot
 } from 'lucide-react';
 
 interface LoginViewProps {

@@ -7,7 +7,7 @@ import {
   onAuthStateChanged,
   GoogleAuthProvider,
   signInWithPopup,
-  User as FirebaseUser
+  type User as FirebaseUser
 } from "firebase/auth";
 
 const firebaseConfig = {

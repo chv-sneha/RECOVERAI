@@ -35,11 +35,11 @@ export const SingleLiveDemoModal: React.FC<SingleLiveDemoModalProps> = ({
     setCurrentStep(1);
     setIsExecuting(true);
 
-    const timer1 = setTimeout(() => setCurrentStep(2), 1200);
-    const timer2 = setTimeout(() => setCurrentStep(3), 2600);
-    const timer3 = setTimeout(() => setCurrentStep(4), 4000);
-    const timer4 = setTimeout(() => setCurrentStep(5), 5400);
-    const timer5 = setTimeout(() => {
+    setTimeout(() => setCurrentStep(2), 1200);
+    setTimeout(() => setCurrentStep(3), 2600);
+    setTimeout(() => setCurrentStep(4), 4000);
+    setTimeout(() => setCurrentStep(5), 5400);
+    setTimeout(() => {
       setCurrentStep(6);
       setIsExecuting(false);
       // Create recovered case record with custom details
