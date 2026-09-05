@@ -206,7 +206,7 @@ export const SingleLiveDemoModal: React.FC<SingleLiveDemoModalProps> = ({
 
         {/* Step Progress Timeline */}
         {isFormSubmitted && (
-          <div className="space-y-3 mb-6">
+          <div className="space-y-3 mb-6 max-h-[50vh] overflow-y-auto pr-1">
             {steps.map((step) => {
               const Icon = step.icon;
               const isDone = currentStep > step.num;
@@ -249,6 +249,54 @@ export const SingleLiveDemoModal: React.FC<SingleLiveDemoModalProps> = ({
                 </div>
               );
             })}
+
+            {/* Visual BUSINESS OUTCOME Summary Card (Renders upon Step 6 Completion) */}
+            {currentStep >= 7 && (
+              <div className="mt-4 p-5 rounded-2xl bg-gradient-to-br from-emerald-950/80 via-slate-900 to-slate-950 border border-emerald-500/40 shadow-2xl space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                {/* Banner */}
+                <div className="flex items-center justify-between border-b border-emerald-500/20 pb-3">
+                  <div className="flex items-center gap-2 text-emerald-400">
+                    <CheckCircle2 className="w-5 h-5" />
+                    <span className="font-black text-sm uppercase tracking-wider">AUTONOMOUS RECOVERY SUCCESSFUL</span>
+                  </div>
+                  <span className="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-mono font-bold border border-emerald-500/40">
+                    +₹{customAmount.toLocaleString('en-IN')} Credited
+                  </span>
+                </div>
+
+                {/* Outcome Metrics Grid */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                  <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800">
+                    <span className="text-slate-500 block text-[10px] uppercase font-bold">Amount Recovered</span>
+                    <span className="font-black text-emerald-400 text-base">₹{customAmount.toLocaleString('en-IN')}</span>
+                  </div>
+                  <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800">
+                    <span className="text-slate-500 block text-[10px] uppercase font-bold">Time to Recover</span>
+                    <span className="font-bold text-white text-sm">6.8 Seconds</span>
+                  </div>
+                  <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800">
+                    <span className="text-slate-500 block text-[10px] uppercase font-bold">Intervention</span>
+                    <span className="font-bold text-sky-400 text-xs">Payment Link (plink)</span>
+                  </div>
+                  <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800">
+                    <span className="text-slate-500 block text-[10px] uppercase font-bold">AI Probability</span>
+                    <span className="font-bold text-purple-400 text-sm">90.0% Confidence</span>
+                  </div>
+                </div>
+
+                {/* Micro Progression Timeline & Impact Bar */}
+                <div className="pt-2 border-t border-slate-800/80 space-y-2">
+                  <div className="flex items-center justify-between text-[11px]">
+                    <span className="text-slate-400 font-medium">Business Impact:</span>
+                    <span className="text-emerald-400 font-bold">Revenue Risk Reduced • Dashboard Metrics Auto-Updated</span>
+                  </div>
+                  {/* Before / After Impact Progress Bar */}
+                  <div className="w-full bg-slate-950 h-2.5 rounded-full overflow-hidden flex border border-slate-800">
+                    <div className="bg-emerald-500 h-full transition-all duration-1000" style={{ width: '100%' }} />
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
